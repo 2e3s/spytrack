@@ -1,0 +1,6 @@
+pyuserinput @ git+https://github.com/PyUserInput/PyUserInput.git@ac2d4c7a7f4b1a72e70b1a2ef8925d5312fb12bc#egg=pyuserinput;  sys_platform == 'linux'
+aw-core @ git+https://github.com/ActivityWatch/aw-core@master#egg=aw-core
+aw-client @ git+https://github.com/ActivityWatch/aw-client@master#egg=aw-client
+aw-server @ git+https://github.com/ActivityWatch/aw-server.git@master#egg=aw-server
+aw-watcher-afk @ git+https://github.com/ActivityWatch/aw-watcher-afk.git@master#egg=aw-watcher-afk
+aw-watcher-window @ git+https://github.com/ActivityWatch/aw-watcher-window.git@master#egg=aw-watcher-window
