@@ -22,6 +22,7 @@ def afk_watcher_run() -> None:
 class AfkRunner:
     timeout = 180
     poll_time = 5
+    initiated_shutdown = False
 
     def __init__(self) -> None:
         self.client = ActivityWatchClient("aw-watcher-afk", testing=False)
@@ -43,9 +44,15 @@ class AfkRunner:
         with self.client:
             self.heartbeat_loop()
 
+    def stop(self) -> None:
+        self.initiated_shutdown = True
+
     def heartbeat_loop(self) -> None:
         afk = False
         while True:
+            if self.initiated_shutdown:
+                self.initiated_shutdown = False
+                break
             try:
                 if system() in ["Darwin", "Linux"] and os.getppid() == 1:
                     break
