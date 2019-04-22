@@ -119,3 +119,24 @@ class Timeline:
                 return last_event
             last_event = point
         return None
+
+    def get_events(self) -> Events:
+        events = []
+        for open_i in range(len(self._points)):
+            open_point = self._points[open_i]
+            if open_point.is_end():
+                continue
+            for close_i in range(open_i, len(self._points)):
+                close_point = self._points[close_i]
+                if not close_point.is_end():
+                    continue
+                if open_point.get_event() is close_point.get_event():
+                    old_event = open_point.get_event()
+                    events.append(Event(
+                        old_event.id,
+                        open_point.get_timestamp(),
+                        close_point.get_timestamp() - open_point.get_timestamp(),
+                        old_event.data
+                    ))
+
+        return events
