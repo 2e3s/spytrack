@@ -1,1 +1,1 @@
-from analyze.analyzer import Analyzer
+from .analyzer import Analyzer

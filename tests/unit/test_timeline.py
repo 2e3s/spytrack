@@ -3,7 +3,8 @@ from parameterized import parameterized
 from typing import Tuple, List
 from aw_core import Event
 from . dataset import get_events, get_date
-from analyze.analyzer import Timeline, Analyzer
+from analyze.timeline import Timeline
+from analyze.analyzer import Analyzer
 
 
 class TestTimeline(unittest.TestCase):
