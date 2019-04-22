@@ -5,5 +5,6 @@ aw-server @ git+https://github.com/ActivityWatch/aw-server.git@master#egg=aw-ser
 aw-watcher-afk @ git+https://github.com/ActivityWatch/aw-watcher-afk.git@master#egg=aw-watcher-afk
 aw-watcher-window @ git+https://github.com/ActivityWatch/aw-watcher-window.git@master#egg=aw-watcher-window
 pyyaml
+parameterized
 PyQt5
 PyQtChart
