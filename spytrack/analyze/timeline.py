@@ -126,7 +126,7 @@ class Timeline:
             open_point = self._points[open_i]
             if open_point.is_end():
                 continue
-            for close_i in range(open_i, len(self._points)):
+            for close_i in range(open_i + 1, len(self._points)):
                 close_point = self._points[close_i]
                 if not close_point.is_end():
                     continue
@@ -138,5 +138,6 @@ class Timeline:
                         close_point.get_timestamp() - open_point.get_timestamp(),
                         old_event.data
                     ))
+                    break
 
         return events

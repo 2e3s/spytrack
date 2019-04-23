@@ -19,7 +19,7 @@ class Analyzer:
         else:
             self.client = client
 
-    def get_points(self) -> BucketPoints:
+    def get_points(self) -> Events:
         buckets = {key: value for key, value in self.client.get_buckets().items() if value['type'] in [
             'currentwindow',
             'afkstatus',
@@ -45,7 +45,7 @@ class Analyzer:
             timelines[afk_bucket],
             Analyzer.app_afk_timeline_condition
         )
-        all_points: BucketPoints = []
+        all_events: Events = []
         # leave only web-events belonging to the corresponding app (already non-afk)
         for web_bucket_name, app_name in browser_matches.items():
             timelines[web_bucket_name].intersect(
@@ -57,12 +57,12 @@ class Analyzer:
                 lambda _: True,
                 False
             )
-            all_points += timelines[web_bucket_name].get_points()
+            all_events += timelines[web_bucket_name].get_events()
 
-        all_points += timelines[app_bucket].get_points()
-        all_points.sort()
+        all_events += timelines[app_bucket].get_events()
+        all_events.sort()
 
-        return all_points
+        return all_events
 
     @staticmethod
     def app_afk_timeline_condition(afk_event: BucketPoint) -> bool:

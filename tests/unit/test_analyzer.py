@@ -23,7 +23,7 @@ class TestAnalyzer(unittest.TestCase):
         config: Config = Mock()
 
         analyzer = Analyzer(config, client_mock)
-        points = analyzer.get_points()
+        events = analyzer.get_points()
 
         # Application on non-afk
         # [(5, {'app': 'Another2', 'title': 'whatever'}, False),
@@ -46,20 +46,16 @@ class TestAnalyzer(unittest.TestCase):
         #  (10, {'app': 'Browser', 'title': 'website - Browser'}, True)
         #  (12, {'app': 'Browser', 'title': 'website - Browser'}, False),
         #  (12, {'app': 'Browser', 'title': 'website - Browser'}, True)
-        check_points = [
-            ('nothing2', 6, False),
-            ('nothing2', 9, True),
-            ('website - Browser', 9, False),
-            ('website', 10, False),
-            ('website - Browser', 10, True),
-            ('website', 11, True),
-            ('website', 12, False),
-            ('website', 13, True),
+        check_events = [
+            ('nothing2', 6, 3),
+            ('website - Browser', 9, 1),
+            ('website', 10, 1),
+            ('website', 12, 1),
         ]
-        self.assertEqual(len(check_points), len(points))
-        for i in range(0, len(check_points)):
-            check = check_points[i]
-            point = points[i]
-            self.assertEqual(check[0], point.get_event_data()['title'])
-            self.assertEqual(check[1], point.get_timestamp().second, point.get_event_data()['title'])
-            self.assertEqual(check[2], point.is_end(), point.get_event_data()['title'])
+        self.assertEqual(len(check_events), len(events))
+        for i in range(0, len(check_events)):
+            check = check_events[i]
+            event = events[i]
+            self.assertEqual(check[0], event.data['title'])
+            self.assertEqual(check[1], event.timestamp.second, event.data['title'])
+            self.assertEqual(check[2], event.duration.seconds, event.data['title'])
