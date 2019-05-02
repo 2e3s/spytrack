@@ -5,7 +5,7 @@ from gui.main_window import MainWindow
 from runner import Runner
 
 
-class Tray(QSystemTrayIcon):
+class Tray(QSystemTrayIcon):  # type: ignore
     def __init__(self, parent: QtCore.QObject, config_storage: ConfigStorage, stats_runner: Runner) -> None:
         super(Tray, self).__init__(parent)
 

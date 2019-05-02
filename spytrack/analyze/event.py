@@ -2,7 +2,7 @@ from aw_core import Event as ParentEvent
 from .bucket_type import BucketType
 
 
-class Event(ParentEvent):
+class Event(ParentEvent):  # type: ignore
     type: BucketType
 
     def __init__(self, event: ParentEvent, bucket_type: BucketType) -> None:

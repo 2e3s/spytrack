@@ -11,7 +11,7 @@ from config import ConfigStorage
 from runner import Runner
 
 
-class MainWindow(QtWidgets.QMainWindow):
+class MainWindow(QtWidgets.QMainWindow):  # type: ignore
     ui: main.Ui_Main
 
     def __init__(self, config_storage: ConfigStorage, stats_runner: Runner) -> None:
