@@ -4,7 +4,7 @@ from typing import Tuple, List
 from aw_core import Event
 from . dataset import get_events, get_date
 from analyze.timeline import Timeline
-from analyze.analyzer import Analyzer
+from analyze.events_analyzer import EventsAnalyzer
 
 
 class TestTimeline(unittest.TestCase):
@@ -110,19 +110,19 @@ class TestTimeline(unittest.TestCase):
         afk_events = [Event(2, get_date(10, 0, data[0]), data[1], {'status': 'not-afk'}) for data in afk_data]
         app_timeline = Timeline.create_from_bucket_events('currentwindow', app_events)
         afk_timeline = Timeline.create_from_bucket_events('afkstatus', afk_events)
-        app_timeline.intersect(afk_timeline, Analyzer.app_afk_timeline_condition)
+        app_timeline.intersect(afk_timeline, EventsAnalyzer.app_afk_timeline_condition)
         self.assert_timeline(app_timeline, inclusive_results)
 
         app_timeline = Timeline.create_from_bucket_events('currentwindow', app_events)
         afk_timeline = Timeline.create_from_bucket_events('afkstatus', afk_events)
-        app_timeline.intersect(afk_timeline, Analyzer.app_afk_timeline_condition, False)
+        app_timeline.intersect(afk_timeline, EventsAnalyzer.app_afk_timeline_condition, False)
         self.assert_timeline(app_timeline, exclusive_results)
 
     def test_intersect(self) -> None:
         app_timeline = Timeline.create_from_bucket_events('currentwindow', get_events('window'))
         afk_timeline = Timeline.create_from_bucket_events('afkstatus', get_events('afk'))
 
-        app_timeline.intersect(afk_timeline, Analyzer.app_afk_timeline_condition)
+        app_timeline.intersect(afk_timeline, EventsAnalyzer.app_afk_timeline_condition)
         self.assert_timeline(app_timeline, [
             ('Browser', 6, False),
             ('Browser', 11, True),

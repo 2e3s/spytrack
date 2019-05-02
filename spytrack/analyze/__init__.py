@@ -1,1 +1,1 @@
-from .analyzer import Analyzer
+from .events_analyzer import EventsAnalyzer

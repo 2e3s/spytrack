@@ -1,4 +1,11 @@
+from typing import List
 from PyQt5 import QtWidgets, QtCore
+from PyQt5.QtChart import QPieSeries
+from PyQt5.QtGui import QPainter
+
+from analyze.stats import get_pie_chart
+from analyze import EventsAnalyzer
+from analyze.matched_event import MatchedEvent
 from gui.ui import main
 from config import ConfigStorage
 from runner import Runner
@@ -28,13 +35,17 @@ class MainWindow(QtWidgets.QMainWindow):
         self._run_timer()
 
     def _run_chart(self) -> None:
-        pass
+        analyzer = EventsAnalyzer(self.config)
+        events = analyzer.get_events()
+        matched_events = analyzer.match(events, self.config.get_projects(), self.config.none_project)
+        self.draw_chart(matched_events)
 
     def _run_timer(self) -> None:
+        self._run_chart()
         self.timer = QtCore.QTimer()
         self.timer.setSingleShot(False)
         self.timer.timeout.connect(self._run_chart)
-        self.timer.start(self.config.get_interval() * 5000)
+        self.timer.start(self.config.get_interval() * 1000)
 
     def _state_changed(self) -> None:
         self.ui.hostEdit.setDisabled(self.ui.isLocalServerBox.isChecked())
@@ -52,3 +63,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.stats_runner.reload(self.config)
         self.timer.start(self.config.get_interval() * 1000)
         self.ui.applyButton.setDisabled(False)
+
+    def draw_chart(self, matched_events: List[MatchedEvent]) -> None:
+        chart_data = get_pie_chart(matched_events)
+        series = QPieSeries()
+        for project, duration in chart_data.data.items():
+            series.append(project, duration)
+        self.ui.chartView.setRenderHint(QPainter.Antialiasing)
+        self.ui.chartView.chart().removeAllSeries()
+        self.ui.chartView.chart().addSeries(series)

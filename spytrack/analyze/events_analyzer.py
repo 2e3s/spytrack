@@ -1,17 +1,18 @@
+import re
 from typing import Dict, List, Any, Callable
 from aw_client import ActivityWatchClient
-from aw_core import Event
+from .event import Event
+from .matched_event import MatchedEvent
 from .bucket_point import BucketPoint
 from .timeline import Timeline
-from config import Config
-
+from config import Config, Projects
 
 ClientBuckets = Dict[str, Dict[str, Any]]
 Events = List[Event]
 BucketPoints = List[BucketPoint]
 
 
-class Analyzer:
+class EventsAnalyzer:
     def __init__(self, config: Config, client: ActivityWatchClient = None) -> None:
         self.config = config
         if client is None:
@@ -19,7 +20,7 @@ class Analyzer:
         else:
             self.client = client
 
-    def get_points(self) -> Events:
+    def get_events(self) -> Events:
         buckets = {key: value for key, value in self.client.get_buckets().items() if value['type'] in [
             'currentwindow',
             'afkstatus',
@@ -35,7 +36,7 @@ class Analyzer:
         browser_buckets = [key for key, value in buckets.items() if value['type'] == 'web.tab.current']
         app_bucket = [key for key, value in buckets.items() if value['type'] == 'currentwindow'][0]
         afk_bucket = [key for key, value in buckets.items() if value['type'] == 'afkstatus'][0]
-        browser_matches = Analyzer._match_browser_buckets(app_bucket, browser_buckets, timelines)
+        browser_matches = EventsAnalyzer._match_browser_buckets(app_bucket, browser_buckets, timelines)
         for bucket in browser_buckets:
             if bucket not in browser_matches:
                 del timelines[bucket]
@@ -43,7 +44,7 @@ class Analyzer:
         # leave only windows non-afk events
         timelines[app_bucket].intersect(
             timelines[afk_bucket],
-            Analyzer.app_afk_timeline_condition
+            EventsAnalyzer.app_afk_timeline_condition
         )
         all_events: Events = []
         # leave only web-events belonging to the corresponding app (already non-afk)
@@ -63,6 +64,32 @@ class Analyzer:
         all_events.sort()
 
         return all_events
+
+    def match(self, events: Events, projects: Projects, none_project: str) -> List[MatchedEvent]:
+        matched_events = []
+        for event in events:
+            match_result = False
+            for project, definitions in projects.items():
+                for definition in definitions:
+                    match_result = self._match_event(event, definition)
+                    if match_result:
+                        matched_events.append(MatchedEvent(project, event))
+                        break
+                if match_result:
+                    break
+            if not match_result:
+                matched_events.append(MatchedEvent(none_project, event))
+
+        return matched_events
+
+    def _match_event(self, event: Event, definition: Dict[str, Any]) -> bool:
+        if 'url' in definition and 'url' in event.data:
+            return re.search(definition['url'], event.data['url'], flags=re.IGNORECASE) is not None
+        if 'title' in definition and 'title' in event.data:
+            return re.search(definition['title'], event.data['title'], flags=re.IGNORECASE) is not None
+        if 'app' in definition and 'app' in event.data:
+            return re.search(definition['app'], event.data['app'], flags=re.IGNORECASE) is not None
+        return False
 
     @staticmethod
     def app_afk_timeline_condition(afk_event: BucketPoint) -> bool:

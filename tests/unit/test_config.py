@@ -9,11 +9,11 @@ class TestConfig(unittest.TestCase):
             "daemon": {
                 "port": 1,
                 "host": "2",
-                "interval": 3,
                 "database": "4",
             },
             "gui": {
-                "run_daemon": True
+                "run_daemon": True,
+                "interval": 3,
             },
         })
         self.assertEqual(1, config.get_port())

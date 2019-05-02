@@ -12,11 +12,11 @@ class TestFileConfigStorage(unittest.TestCase):
             "daemon": {
                 "port": 100,
                 "host": "http://save.test",
-                "interval": 3,
                 "database": "save.test.db",
             },
             "gui": {
-                "run_daemon": True
+                "run_daemon": True,
+                "interval": 3,
             },
         })
         save_storage.save(saved_config)

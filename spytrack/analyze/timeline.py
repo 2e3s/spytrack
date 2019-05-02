@@ -1,6 +1,7 @@
 import datetime
 from typing import Callable, List, Optional, Union, Dict
-from aw_core import Event
+from aw_core import Event as ParentEvent
+from .event import Event
 from .bucket_point import BucketPoint
 from .bucket_type import BucketType
 
@@ -132,12 +133,13 @@ class Timeline:
                     continue
                 if open_point.get_event() is close_point.get_event():
                     old_event = open_point.get_event()
-                    events.append(Event(
+                    event = ParentEvent(
                         old_event.id,
                         open_point.get_timestamp(),
                         close_point.get_timestamp() - open_point.get_timestamp(),
                         old_event.data
-                    ))
+                    )
+                    events.append(Event(event, open_point.get_event_type()))
                     break
 
         return events

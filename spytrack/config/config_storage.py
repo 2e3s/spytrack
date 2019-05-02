@@ -35,10 +35,10 @@ class FileConfigStorage:
             "daemon": {
                 "host": config.get_host(),
                 "port": config.get_port(),
-                "interval": config.get_interval(),
             },
             "gui": {
-                "run_daemon": config.is_run_server()
+                "run_daemon": config.is_run_server(),
+                "interval": config.get_interval(),
             }
         }
         with open(self.filename, 'w') as outfile:

@@ -1,6 +1,6 @@
 daemon:
   host: http://localhost
-  interval: 1
   port: 9011
 gui:
   run_daemon: true
+  interval: 5

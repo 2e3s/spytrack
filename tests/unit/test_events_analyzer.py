@@ -2,7 +2,7 @@ import unittest
 from . dataset import get_events
 from unittest.mock import Mock, MagicMock
 from aw_client import ActivityWatchClient
-from analyze import Analyzer
+from analyze import EventsAnalyzer
 from config import Config
 
 
@@ -22,8 +22,8 @@ class TestAnalyzer(unittest.TestCase):
 
         config: Config = Mock()
 
-        analyzer = Analyzer(config, client_mock)
-        events = analyzer.get_points()
+        analyzer = EventsAnalyzer(config, client_mock)
+        events = analyzer.get_events()
 
         # Application on non-afk
         # [(5, {'app': 'Another2', 'title': 'whatever'}, False),
@@ -59,3 +59,19 @@ class TestAnalyzer(unittest.TestCase):
             self.assertEqual(check[0], event.data['title'])
             self.assertEqual(check[1], event.timestamp.second, event.data['title'])
             self.assertEqual(check[2], event.duration.seconds, event.data['title'])
+
+        matched_events = analyzer.match(events, {
+            'test1': [
+                {'type': 'app', 'app': 'Browser'}
+            ]
+        })
+        check_matched_events = [
+            ('nothing2', None),
+            ('website - Browser', 'test1'),
+            ('website', None),
+            ('website', None),
+        ]
+        for i in range(0, len(check_matched_events)):
+            matched_check = check_matched_events[i]
+            matched_event = matched_events[i]
+            self.assertEqual(matched_check[0], matched_event.event.data['title'])

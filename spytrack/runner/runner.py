@@ -18,19 +18,20 @@ class Runner:
     def __init__(self, config: Config) -> None:
         self.config = config
         self.afk_runner = AfkRunner()
-        setup_logging("aw-runner", testing=False, verbose=False, log_stderr=True, log_file=True)
+        setup_logging("aw-runner", testing=True, verbose=True, log_stderr=True, log_file=True)
 
     def run_all(self) -> None:
         if self.config.is_run_server():
             self.process_server = multiprocessing.Process(target=server_run)
             self.process_server.start()
+            sleep(1)
 
-        self.thread_watcher_awk = threading.Thread(target=self.afk_runner.run)
-        self.thread_watcher_awk.start()
-
-        # TODO make it a thread
-        self.process_watcher_windows = multiprocessing.Process(target=windows_watcher_run)
-        self.process_watcher_windows.start()
+        # self.thread_watcher_awk = threading.Thread(target=self.afk_runner.run)
+        # self.thread_watcher_awk.start()
+        #
+        # # TODO make it a thread
+        # self.process_watcher_windows = multiprocessing.Process(target=windows_watcher_run)
+        # self.process_watcher_windows.start()
 
     def reload(self, config: Config) -> None:
         self.config = config
@@ -43,8 +44,8 @@ class Runner:
             self.process_server.terminate()
             self.process_server = None
 
-        self.afk_runner.stop()
-        self.process_watcher_windows.terminate()
+        # self.afk_runner.stop()
+        # self.process_watcher_windows.terminate()
 
     def __enter__(self) -> None:
         self.run_all()
