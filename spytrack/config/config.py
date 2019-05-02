@@ -17,11 +17,11 @@ class Config:
         self.none_project = str(uuid.uuid4())
         self.projects = {
             "work": [
-                {'type': 'web', 'url': '.*rebilly.*'},
-                {'type': 'app', 'app': 'phpstorm'},
+                {'id': str(uuid.uuid4()), 'type': 'web', 'url': '.*rebilly.*'},
+                {'id': str(uuid.uuid4()), 'type': 'app', 'app': 'phpstorm'},
             ],
             "coding": [
-                {'type': 'app', 'app': 'pycharm'},
+                {'id': str(uuid.uuid4()), 'type': 'app', 'app': 'pycharm'},
             ],
             self.none_project: []
         }

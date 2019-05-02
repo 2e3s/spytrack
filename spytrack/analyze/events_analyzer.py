@@ -73,12 +73,12 @@ class EventsAnalyzer:
                 for definition in definitions:
                     match_result = self._match_event(event, definition)
                     if match_result:
-                        matched_events.append(MatchedEvent(project, event))
+                        matched_events.append(MatchedEvent(project, definition['id'], event))
                         break
                 if match_result:
                     break
             if not match_result:
-                matched_events.append(MatchedEvent(none_project, event))
+                matched_events.append(MatchedEvent(none_project, none_project, event))
 
         return matched_events
 
