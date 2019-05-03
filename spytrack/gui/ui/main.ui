@@ -56,6 +56,85 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_5">
         <item>
+         <layout class="QHBoxLayout" name="datePickLayout">
+          <item>
+           <widget class="QDateTimeEdit" name="startDateTimeEdit">
+            <property name="dateTime">
+             <datetime>
+              <hour>0</hour>
+              <minute>0</minute>
+              <second>0</second>
+              <year>2000</year>
+              <month>1</month>
+              <day>1</day>
+             </datetime>
+            </property>
+            <property name="minimumDateTime">
+             <datetime>
+              <hour>0</hour>
+              <minute>0</minute>
+              <second>0</second>
+              <year>2000</year>
+              <month>1</month>
+              <day>1</day>
+             </datetime>
+            </property>
+            <property name="maximumDate">
+             <date>
+              <year>3000</year>
+              <month>1</month>
+              <day>1</day>
+             </date>
+            </property>
+            <property name="minimumDate">
+             <date>
+              <year>2000</year>
+              <month>1</month>
+              <day>1</day>
+             </date>
+            </property>
+            <property name="currentSection">
+             <enum>QDateTimeEdit::DaySection</enum>
+            </property>
+            <property name="calendarPopup">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QDateTimeEdit" name="endDateTimeEdit">
+            <property name="dateTime">
+             <datetime>
+              <hour>0</hour>
+              <minute>0</minute>
+              <second>0</second>
+              <year>2000</year>
+              <month>1</month>
+              <day>1</day>
+             </datetime>
+            </property>
+            <property name="maximumDate">
+             <date>
+              <year>3000</year>
+              <month>1</month>
+              <day>1</day>
+             </date>
+            </property>
+            <property name="minimumDate">
+             <date>
+              <year>2000</year>
+              <month>1</month>
+              <day>1</day>
+             </date>
+            </property>
+            <property name="currentSection">
+             <enum>QDateTimeEdit::DaySection</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
          <widget class="QChartView" name="chartView"/>
         </item>
        </layout>

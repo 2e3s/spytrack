@@ -1,3 +1,4 @@
+import datetime
 from typing import List
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtChart import QPieSeries
@@ -22,17 +23,24 @@ class MainWindow(QtWidgets.QMainWindow):  # type: ignore
         self.ui = main.Ui_Main()
         self.ui.setupUi(self)
 
+        self._setup_settings()
+        self._setup_datetime()
+        self._run_timer()
+
+    def _setup_settings(self) -> None:
         self.ui.portBox.setValue(self.config.get_port())
         self.ui.intervalBox.setValue(self.config.get_interval())
         self.ui.hostEdit.setText(self.config.get_host())
-
         self.ui.isLocalServerBox.stateChanged.connect(self._state_changed)
         self.ui.isLocalServerBox\
             .setCheckState(QtCore.Qt.Checked if self.config.is_run_server() else QtCore.Qt.Unchecked)
-
         self.ui.applyButton.clicked.connect(self._modify_config)
 
-        self._run_timer()
+    def _setup_datetime(self) -> None:
+        time = datetime.datetime.now()
+        start_time = datetime.datetime(time.year, time.month, time.day, 6)
+        self.ui.startDateTimeEdit.setDateTime(start_time)
+        self.ui.endDateTimeEdit.setDateTime(time)
 
     def _run_chart(self) -> None:
         analyzer = EventsAnalyzer(self.config)
