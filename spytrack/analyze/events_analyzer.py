@@ -1,4 +1,5 @@
 import re
+from datetime import datetime
 from typing import Dict, List, Any, Callable
 from aw_client import ActivityWatchClient
 from .event import Event
@@ -20,7 +21,7 @@ class EventsAnalyzer:
         else:
             self.client = client
 
-    def get_events(self) -> Events:
+    def get_events(self, start_date: datetime, end_date: datetime) -> Events:
         buckets = {key: value for key, value in self.client.get_buckets().items() if value['type'] in [
             'currentwindow',
             'afkstatus',
@@ -29,13 +30,17 @@ class EventsAnalyzer:
 
         timelines = {}
         for bucket in buckets:
-            events = self.client.get_events(bucket, 1000)
+            events = self.client.get_events(bucket, -1, start=start_date, end=end_date)
             events = [event for event in events if event.duration.total_seconds() > 0]
             timelines[bucket] = Timeline.create_from_bucket_events(buckets[bucket]['type'], events)
 
         browser_buckets = [key for key, value in buckets.items() if value['type'] == 'web.tab.current']
-        app_bucket = [key for key, value in buckets.items() if value['type'] == 'currentwindow'][0]
-        afk_bucket = [key for key, value in buckets.items() if value['type'] == 'afkstatus'][0]
+        app_buckets = [key for key, value in buckets.items() if value['type'] == 'currentwindow']
+        afk_buckets = [key for key, value in buckets.items() if value['type'] == 'afkstatus']
+        if len(app_buckets) == 0 or len(afk_buckets) == 0:
+            return []
+        app_bucket = app_buckets[0]
+        afk_bucket = afk_buckets[0]
         browser_matches = EventsAnalyzer._match_browser_buckets(app_bucket, browser_buckets, timelines)
         for bucket in browser_buckets:
             if bucket not in browser_matches:

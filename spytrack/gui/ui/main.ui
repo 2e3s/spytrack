@@ -103,6 +103,9 @@
           </item>
           <item>
            <widget class="QDateTimeEdit" name="endDateTimeEdit">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="dateTime">
              <datetime>
               <hour>0</hour>
@@ -129,6 +132,25 @@
             </property>
             <property name="currentSection">
              <enum>QDateTimeEdit::DaySection</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="enableEndDate">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Now</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+            <property name="tristate">
+             <bool>false</bool>
             </property>
            </widget>
           </item>

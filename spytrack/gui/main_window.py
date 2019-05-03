@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timezone
 from typing import List
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtChart import QPieSeries
@@ -31,20 +31,35 @@ class MainWindow(QtWidgets.QMainWindow):  # type: ignore
         self.ui.portBox.setValue(self.config.get_port())
         self.ui.intervalBox.setValue(self.config.get_interval())
         self.ui.hostEdit.setText(self.config.get_host())
-        self.ui.isLocalServerBox.stateChanged.connect(self._state_changed)
+
+        def _state_changed() -> None:
+            self.ui.hostEdit.setDisabled(self.ui.isLocalServerBox.isChecked())
+        self.ui.isLocalServerBox.stateChanged.connect(_state_changed)
         self.ui.isLocalServerBox\
             .setCheckState(QtCore.Qt.Checked if self.config.is_run_server() else QtCore.Qt.Unchecked)
         self.ui.applyButton.clicked.connect(self._modify_config)
 
     def _setup_datetime(self) -> None:
-        time = datetime.datetime.now()
-        start_time = datetime.datetime(time.year, time.month, time.day, 6)
+        end_time = datetime.now().replace(microsecond=0)
+        start_time = end_time.replace(hour=6, minute=0, second=0)
+        if start_time > end_time:
+            start_time = start_time.replace(day=start_time.day - 1)
         self.ui.startDateTimeEdit.setDateTime(start_time)
-        self.ui.endDateTimeEdit.setDateTime(time)
+        self.ui.endDateTimeEdit.setDateTime(end_time.replace())
+
+        def _state_changed() -> None:
+            self.ui.endDateTimeEdit.setDisabled(self.ui.enableEndDate.isChecked())
+        self.ui.enableEndDate.stateChanged.connect(_state_changed)
 
     def _run_chart(self) -> None:
         analyzer = EventsAnalyzer(self.config)
-        events = analyzer.get_events()
+        start_date: datetime = self.ui.startDateTimeEdit.dateTime().toPyDateTime()
+        if self.ui.enableEndDate.isChecked():
+            end_date = datetime.now()
+        else:
+            end_date = self.ui.endDateTimeEdit.dateTime().toPyDateTime()
+
+        events = analyzer.get_events(start_date.astimezone(timezone.utc), end_date.astimezone(timezone.utc))
         matched_events = analyzer.match(events, self.config.get_projects(), self.config.none_project)
         self.draw_chart(matched_events)
 
@@ -54,9 +69,6 @@ class MainWindow(QtWidgets.QMainWindow):  # type: ignore
         self.timer.setSingleShot(False)
         self.timer.timeout.connect(self._run_chart)
         self.timer.start(self.config.get_interval() * 1000)
-
-    def _state_changed(self) -> None:
-        self.ui.hostEdit.setDisabled(self.ui.isLocalServerBox.isChecked())
 
     def _modify_config(self) -> None:
         self.ui.applyButton.setDisabled(True)

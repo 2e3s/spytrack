@@ -26,12 +26,12 @@ class Runner:
             self.process_server.start()
             sleep(1)
 
-        # self.thread_watcher_awk = threading.Thread(target=self.afk_runner.run)
-        # self.thread_watcher_awk.start()
-        #
-        # # TODO make it a thread
-        # self.process_watcher_windows = multiprocessing.Process(target=windows_watcher_run)
-        # self.process_watcher_windows.start()
+        self.thread_watcher_awk = threading.Thread(target=self.afk_runner.run)
+        self.thread_watcher_awk.start()
+
+        # TODO make it a thread
+        self.process_watcher_windows = multiprocessing.Process(target=windows_watcher_run)
+        self.process_watcher_windows.start()
 
     def reload(self, config: Config) -> None:
         self.config = config
@@ -44,8 +44,8 @@ class Runner:
             self.process_server.terminate()
             self.process_server = None
 
-        # self.afk_runner.stop()
-        # self.process_watcher_windows.terminate()
+        self.afk_runner.stop()
+        self.process_watcher_windows.terminate()
 
     def __enter__(self) -> None:
         self.run_all()
