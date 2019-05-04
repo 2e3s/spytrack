@@ -1,5 +1,5 @@
 import re
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, List, Any, Callable
 from aw_client import ActivityWatchClient
 from .event import Event
@@ -30,7 +30,12 @@ class EventsAnalyzer:
 
         timelines = {}
         for bucket in buckets:
-            events = self.client.get_events(bucket, -1, start=start_date, end=end_date)
+            events = self.client.get_events(
+                bucket,
+                -1,
+                start_date.astimezone(timezone.utc),
+                end_date.astimezone(timezone.utc)
+            )
             events = [event for event in events if event.duration.total_seconds() > 0]
             timelines[bucket] = Timeline.create_from_bucket_events(buckets[bucket]['type'], events)
 

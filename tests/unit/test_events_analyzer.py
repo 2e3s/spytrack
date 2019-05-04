@@ -1,4 +1,6 @@
 import unittest
+from datetime import datetime
+
 from . dataset import get_events
 from unittest.mock import Mock, MagicMock
 from aw_client import ActivityWatchClient
@@ -23,7 +25,8 @@ class TestAnalyzer(unittest.TestCase):
         config: Config = Mock()
 
         analyzer = EventsAnalyzer(config, client_mock)
-        events = analyzer.get_events()
+        now_time = datetime.now()
+        events = analyzer.get_events(now_time.replace(day=now_time.day-1), now_time.replace(day=now_time.day+1))
 
         # Application on non-afk
         # [(5, {'app': 'Another2', 'title': 'whatever'}, False),
@@ -62,9 +65,9 @@ class TestAnalyzer(unittest.TestCase):
 
         matched_events = analyzer.match(events, {
             'test1': [
-                {'type': 'app', 'app': 'Browser'}
+                {'id': '1', 'type': 'app', 'app': 'Browser'},
             ]
-        })
+        }, 'none')
         check_matched_events = [
             ('nothing2', None),
             ('website - Browser', 'test1'),

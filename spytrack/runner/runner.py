@@ -29,7 +29,7 @@ class Runner:
         self.thread_watcher_awk = threading.Thread(target=self.afk_runner.run)
         self.thread_watcher_awk.start()
 
-        # TODO make it a thread
+        # TODO.md make it a thread
         self.process_watcher_windows = multiprocessing.Process(target=windows_watcher_run)
         self.process_watcher_windows.start()
 

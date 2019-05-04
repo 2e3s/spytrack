@@ -51,6 +51,13 @@ class MainWindow(QtWidgets.QMainWindow):  # type: ignore
             self.ui.endDateTimeEdit.setDisabled(self.ui.enableEndDate.isChecked())
         self.ui.enableEndDate.stateChanged.connect(_state_changed)
 
+    def _run_timer(self) -> None:
+        self._run_chart()
+        self.timer = QtCore.QTimer()
+        self.timer.setSingleShot(False)
+        self.timer.timeout.connect(self._run_chart)
+        self.timer.start(self.config.get_interval() * 1000)
+
     def _run_chart(self) -> None:
         analyzer = EventsAnalyzer(self.config)
         start_date: datetime = self.ui.startDateTimeEdit.dateTime().toPyDateTime()
@@ -59,16 +66,18 @@ class MainWindow(QtWidgets.QMainWindow):  # type: ignore
         else:
             end_date = self.ui.endDateTimeEdit.dateTime().toPyDateTime()
 
-        events = analyzer.get_events(start_date.astimezone(timezone.utc), end_date.astimezone(timezone.utc))
+        events = analyzer.get_events(start_date, end_date)
         matched_events = analyzer.match(events, self.config.get_projects(), self.config.none_project)
-        self.draw_chart(matched_events)
+        self._draw_chart(matched_events)
 
-    def _run_timer(self) -> None:
-        self._run_chart()
-        self.timer = QtCore.QTimer()
-        self.timer.setSingleShot(False)
-        self.timer.timeout.connect(self._run_chart)
-        self.timer.start(self.config.get_interval() * 1000)
+    def _draw_chart(self, matched_events: List[MatchedEvent]) -> None:
+        chart_data = get_pie_chart(matched_events)
+        series = QPieSeries()
+        for project, duration in chart_data.data.items():
+            series.append(project, duration)
+        self.ui.chartView.setRenderHint(QPainter.Antialiasing)
+        self.ui.chartView.chart().removeAllSeries()
+        self.ui.chartView.chart().addSeries(series)
 
     def _modify_config(self) -> None:
         self.ui.applyButton.setDisabled(True)
@@ -83,12 +92,3 @@ class MainWindow(QtWidgets.QMainWindow):  # type: ignore
         self.stats_runner.reload(self.config)
         self.timer.start(self.config.get_interval() * 1000)
         self.ui.applyButton.setDisabled(False)
-
-    def draw_chart(self, matched_events: List[MatchedEvent]) -> None:
-        chart_data = get_pie_chart(matched_events)
-        series = QPieSeries()
-        for project, duration in chart_data.data.items():
-            series.append(project, duration)
-        self.ui.chartView.setRenderHint(QPainter.Antialiasing)
-        self.ui.chartView.chart().removeAllSeries()
-        self.ui.chartView.chart().addSeries(series)
