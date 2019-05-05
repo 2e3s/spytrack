@@ -20,13 +20,12 @@ def afk_watcher_run() -> None:
 
 
 class AfkRunner:
-    timeout = 180
-    poll_time = 5
-    initiated_shutdown = False
-
-    def __init__(self) -> None:
+    def __init__(self, poll_time: int = 5, timeout: int = 180) -> None:
         self.client = ActivityWatchClient("aw-watcher-afk", testing=False)
         self.bucketname = "{}_{}".format(self.client.client_name, self.client.client_hostname)
+        self.poll_time = poll_time
+        self.timeout = timeout
+        self.initiated_shutdown: bool = False
 
     def ping(self, afk: bool, timestamp: datetime, duration: float = 0) -> None:
         data = {"status": "afk" if afk else "not-afk"}

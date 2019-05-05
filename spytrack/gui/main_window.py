@@ -1,12 +1,13 @@
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import List
 from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtChart import QPieSeries
+from PyQt5.QtChart import QPieSeries, QBarSeries, QBarSet, QBarCategoryAxis
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPainter
-
 from analyze.stats import get_pie_chart
 from analyze import EventsAnalyzer
 from analyze.matched_event import MatchedEvent
+from gui.chart import Chart
 from gui.ui import main
 from config import ConfigStorage
 from runner import Runner
@@ -22,6 +23,7 @@ class MainWindow(QtWidgets.QMainWindow):  # type: ignore
         self.config_storage = config_storage
         self.ui = main.Ui_Main()
         self.ui.setupUi(self)
+        self.chart = Chart(self.config, self.ui.chartView)
 
         self._setup_settings()
         self._setup_datetime()
@@ -68,16 +70,7 @@ class MainWindow(QtWidgets.QMainWindow):  # type: ignore
 
         events = analyzer.get_events(start_date, end_date)
         matched_events = analyzer.match(events, self.config.get_projects(), self.config.none_project)
-        self._draw_chart(matched_events)
-
-    def _draw_chart(self, matched_events: List[MatchedEvent]) -> None:
-        chart_data = get_pie_chart(matched_events)
-        series = QPieSeries()
-        for project, duration in chart_data.data.items():
-            series.append(project, duration)
-        self.ui.chartView.setRenderHint(QPainter.Antialiasing)
-        self.ui.chartView.chart().removeAllSeries()
-        self.ui.chartView.chart().addSeries(series)
+        self.chart.draw(matched_events)
 
     def _modify_config(self) -> None:
         self.ui.applyButton.setDisabled(True)
