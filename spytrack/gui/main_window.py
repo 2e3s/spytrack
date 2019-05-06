@@ -83,5 +83,6 @@ class MainWindow(QtWidgets.QMainWindow):  # type: ignore
 
         self.config_storage.save(self.config)
         self.stats_runner.reload(self.config)
+        self.chart.reload_config(self.config)
         self.timer.start(self.config.get_interval() * 1000)
         self.ui.applyButton.setDisabled(False)

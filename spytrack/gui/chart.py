@@ -28,6 +28,7 @@ class Chart:
         # self.chart_view.chart().removeAllSeries()
         # self.chart_view.chart().addSeries(series)
 
+        # TODO redo with stacked bar chart
         series = QBarSeries()
         bar_set = QBarSet('Default')
         categories = []
@@ -46,3 +47,6 @@ class Chart:
         series.attachAxis(axis_x)
 
         self.initialized = True
+
+    def reload_config(self, config: Config) -> None:
+        self.config = config
