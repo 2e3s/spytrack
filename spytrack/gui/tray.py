@@ -1,4 +1,4 @@
-from PyQt5 import QtWidgets, QtCore, QtGui
+from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QAction, qApp, QMenu, QSystemTrayIcon
 from config import ConfigStorage
 from gui.main_window import MainWindow
@@ -11,9 +11,9 @@ class Tray(QSystemTrayIcon):  # type: ignore
 
         self.main_window = MainWindow(config_storage, stats_runner)
         self.setIcon(self.main_window.style().standardIcon(QtWidgets.QStyle.SP_ComputerIcon))
-        
-        show_action = QAction("Show", self.main_window)
-        show_action.triggered.connect(self.main_window.show)
+
+        show_action = QAction("Show/Hide", self.main_window)
+        show_action.triggered.connect(self.show_hide_main_window)
         quit_action = QAction("Exit", parent)
         quit_action.triggered.connect(qApp.quit)
         self.tray_menu = QMenu()
@@ -25,4 +25,10 @@ class Tray(QSystemTrayIcon):  # type: ignore
     def left_click(self, reason: int) -> None:
         print("onTrayIconActivated:", reason)
         if reason == QSystemTrayIcon.Trigger:
-            self.tray_menu.popup(QtGui.QCursor.pos())
+            self.show_hide_main_window()
+
+    def show_hide_main_window(self) -> None:
+        if self.main_window.isVisible():
+            self.main_window.hide()
+        else:
+            self.main_window.show()

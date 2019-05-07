@@ -11,7 +11,7 @@ class MainWindow(QtWidgets.QMainWindow):  # type: ignore
     ui: main.Ui_Main
 
     def __init__(self, config_storage: ConfigStorage, stats_runner: Runner) -> None:
-        super(MainWindow, self).__init__()
+        super().__init__()
         self.stats_runner = stats_runner
         self.config = config_storage.load()
         self.config_storage = config_storage
