@@ -6,7 +6,7 @@ from .event import Event
 from .matched_event import MatchedEvent
 from .bucket_point import BucketPoint
 from .timeline import Timeline
-from config import Config, Projects
+from config import Config, Project
 
 ClientBuckets = Dict[str, Dict[str, Any]]
 Events = List[Event]
@@ -75,15 +75,15 @@ class EventsAnalyzer:
 
         return all_events
 
-    def match(self, events: Events, projects: Projects, none_project: str) -> List[MatchedEvent]:
+    def match(self, events: Events, projects: List[Project], none_project: str) -> List[MatchedEvent]:
         matched_events = []
         for event in events:
             match_result = False
-            for project, definitions in projects.items():
-                for definition in definitions:
+            for project in projects:
+                for definition in project.rules:
                     match_result = self._match_event(event, definition)
                     if match_result:
-                        matched_events.append(MatchedEvent(project, definition['id'], event))
+                        matched_events.append(MatchedEvent(project.name, definition['id'], event))
                         break
                 if match_result:
                     break

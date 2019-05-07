@@ -17,6 +17,14 @@ class TestFileConfigStorage(unittest.TestCase):
             "gui": {
                 "run_daemon": True,
                 "interval": 3,
+                "projects": [
+                    {
+                        "name": "test1",
+                        "rules": [
+                            {"id": "123", "app": "Test"},
+                        ],
+                    },
+                ],
             },
         })
         save_storage.save(saved_config)
@@ -29,5 +37,7 @@ class TestFileConfigStorage(unittest.TestCase):
         self.assertEqual(100, load_config.get_port())
         self.assertEqual(3, load_config.get_interval())
         self.assertTrue(load_config.is_run_server())
+        self.assertEqual(2, len(load_config.projects))
+        self.assertEqual(load_config.none_project, load_config.projects[1].name)
 
         file.unlink()

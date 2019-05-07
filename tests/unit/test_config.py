@@ -14,12 +14,22 @@ class TestConfig(unittest.TestCase):
             "gui": {
                 "run_daemon": True,
                 "interval": 3,
+                "projects": [
+                    {
+                        "name": "test1",
+                        "rules": [{"id": "123", "app": "Test"}],
+                    },
+                ],
             },
         })
         self.assertEqual(1, config.get_port())
         self.assertEqual(3, config.get_interval())
         self.assertEqual('2', config.get_host())
         self.assertTrue(config.is_run_server())
+        self.assertEqual(2, len(config.projects))
+        self.assertEqual('test1', config.projects[0].name)
+        self.assertEqual(config.none_project, config.projects[1].name)
+        self.assertEqual([{"id": "123", "app": "Test"}], config.projects[0].rules)
 
         config.set_host('20')
         self.assertEqual('20', config.get_host())

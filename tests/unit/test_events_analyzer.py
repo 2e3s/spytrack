@@ -5,7 +5,7 @@ from . dataset import get_events
 from unittest.mock import Mock, MagicMock
 from aw_client import ActivityWatchClient
 from analyze import EventsAnalyzer
-from config import Config
+from config import Config, Project
 
 
 class TestAnalyzer(unittest.TestCase):
@@ -63,11 +63,9 @@ class TestAnalyzer(unittest.TestCase):
             self.assertEqual(check[1], event.timestamp.second, event.data['title'])
             self.assertEqual(check[2], event.duration.seconds, event.data['title'])
 
-        matched_events = analyzer.match(events, {
-            'test1': [
-                {'id': '1', 'type': 'app', 'app': 'Browser'},
-            ]
-        }, 'none')
+        matched_events = analyzer.match(events, [
+            Project('test1', [{'id': '1', 'type': 'app', 'app': 'Browser'}])
+        ], 'none')
         check_matched_events = [
             ('nothing2', None),
             ('website - Browser', 'test1'),

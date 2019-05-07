@@ -1,12 +1,6 @@
 from datetime import datetime
-from typing import List
 from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtChart import QPieSeries, QBarSeries, QBarSet, QBarCategoryAxis
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPainter
-from analyze.stats import get_pie_chart
 from analyze import EventsAnalyzer
-from analyze.matched_event import MatchedEvent
 from gui.chart import Chart
 from gui.ui import main
 from config import ConfigStorage
@@ -69,7 +63,7 @@ class MainWindow(QtWidgets.QMainWindow):  # type: ignore
             end_date = self.ui.endDateTimeEdit.dateTime().toPyDateTime()
 
         events = analyzer.get_events(start_date, end_date)
-        matched_events = analyzer.match(events, self.config.get_projects(), self.config.none_project)
+        matched_events = analyzer.match(events, self.config.projects, self.config.none_project)
         self.chart.draw(matched_events)
 
     def _modify_config(self) -> None:

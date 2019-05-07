@@ -4,3 +4,8 @@ daemon:
 gui:
   run_daemon: true
   interval: 5
+  projects:
+    - name: coding
+      rules:
+        - type: app
+          app: pycharm

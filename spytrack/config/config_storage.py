@@ -39,6 +39,7 @@ class FileConfigStorage:
             "gui": {
                 "run_daemon": config.is_run_server(),
                 "interval": config.get_interval(),
+                "projects": [project.to_json() for project in config.projects if project.name != config.none_project]
             }
         }
         with open(self.filename, 'w') as outfile:

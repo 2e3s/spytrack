@@ -1,12 +1,26 @@
 import uuid
 from typing import Dict, Any, List
 
-Projects = Dict[str, List[Dict[str, str]]]
+
+class Project:
+    @staticmethod
+    def reinstate(config_project: Any) -> 'Project':
+        return Project(config_project['name'], config_project['rules'])
+
+    def __init__(self, name: str, rules: List[Dict[str, str]]) -> None:
+        self.rules = rules
+        self.name = name
+
+    def to_json(self) -> Any:
+        return {
+            'name': self.name,
+            'rules': [{field: value for field, value in rule.items() if field != 'id'} for rule in self.rules]
+        }
 
 
 class Config:
     config: Dict[str, Any]
-    projects: Projects
+    projects: List[Project]
     none_project: str
 
     def __init__(self, values: Dict[str, Any]) -> None:
@@ -15,16 +29,8 @@ class Config:
         self.interval = int(values['gui']['interval'])
         self.run_daemon = bool(values['gui']['run_daemon'])
         self.none_project = str(uuid.uuid4())
-        self.projects = {
-            "work": [
-                {'id': str(uuid.uuid4()), 'type': 'web', 'url': '.*rebilly.*'},
-                {'id': str(uuid.uuid4()), 'type': 'app', 'app': 'phpstorm'},
-            ],
-            "coding": [
-                {'id': str(uuid.uuid4()), 'type': 'app', 'app': 'pycharm'},
-            ],
-            self.none_project: []
-        }
+        self.projects = [Project.reinstate(project) for project in values['gui']['projects']]
+        self.projects.append(Project(self.none_project, []))
 
     def get_full_address(self) -> str:
         return '%s:%s' % (self.get_host(), self.get_port())
@@ -37,9 +43,6 @@ class Config:
 
     def get_port(self) -> int:
         return self.port
-
-    def get_projects(self) -> Projects:
-        return self.projects
 
     def is_run_server(self) -> bool:
         return self.run_daemon
