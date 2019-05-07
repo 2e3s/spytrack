@@ -17,7 +17,7 @@ class TestConfig(unittest.TestCase):
                 "projects": [
                     {
                         "name": "test1",
-                        "rules": [{"id": "123", "app": "Test"}],
+                        "rules": [{"app": "Test"}],
                     },
                 ],
             },
@@ -26,10 +26,14 @@ class TestConfig(unittest.TestCase):
         self.assertEqual(3, config.get_interval())
         self.assertEqual('2', config.get_host())
         self.assertTrue(config.is_run_server())
+
         self.assertEqual(2, len(config.projects))
         self.assertEqual('test1', config.projects[0].name)
         self.assertEqual(config.none_project, config.projects[1].name)
-        self.assertEqual([{"id": "123", "app": "Test"}], config.projects[0].rules)
+        self.assertEqual(1, len(config.projects[0].rules))
+        self.assertEqual(2, len(config.projects[0].rules[0]))
+        self.assertEqual("Test", config.projects[0].rules[0]["app"])
+        self.assertTrue("id" in config.projects[0].rules[0])
 
         config.set_host('20')
         self.assertEqual('20', config.get_host())

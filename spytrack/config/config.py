@@ -8,7 +8,7 @@ class Project:
         return Project(config_project['name'], config_project['rules'])
 
     def __init__(self, name: str, rules: List[Dict[str, str]]) -> None:
-        self.rules = rules
+        self.rules = [{**rule, 'id': str(uuid.uuid4())} for rule in rules]
         self.name = name
 
     def to_json(self) -> Any:
