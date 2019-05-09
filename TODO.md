@@ -18,7 +18,6 @@
 
 - (2) Put the configuration file to the local directory
 - (1) Add stop-list for app tracker
-- (1) Choose the beginning of the day
 - (2) Wildcard rules and special syntax for regexp rules
 
 ## UI
@@ -29,6 +28,7 @@
 - (2) "Add a rule" dialog to on double-click on project's event
 - (3) Inclusive and exclusive filtering for events on the selected project (for analyzing mismatches).
       Maybe a normal string with ES-like syntax: `+search1 +"search2 complex" -"search exclude"` for simplicity
+- (3) Add tray icon to the simpler runner
 
 ## Projects
 
@@ -37,9 +37,10 @@
 
 # Planned fixes
 
-- (1) List of projects and their events should be updated after beginning of the day
+- (1) List of projects and their events should be updated after any start-end time change
 - (1) Decrease AW logging
 - (2) Make AW web-ui link configurable
+- (1) Set minimum window size, unset maximum window size
 
 ## Refactoring
 

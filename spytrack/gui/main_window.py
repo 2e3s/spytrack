@@ -49,7 +49,7 @@ class MainWindow(QtWidgets.QMainWindow):  # type: ignore
 
     def _setup_datetime(self) -> None:
         end_time = datetime.now().replace(microsecond=0)
-        start_time = end_time.replace(hour=6, minute=0, second=0)
+        start_time = self._get_last_day_beginning(end_time)
         if start_time > end_time:
             start_time = start_time.replace(day=start_time.day - 1)
         self.ui.startDateTimeEdit.setDateTime(start_time)
@@ -57,7 +57,15 @@ class MainWindow(QtWidgets.QMainWindow):  # type: ignore
 
         def _state_changed() -> None:
             self.ui.endDateTimeEdit.setDisabled(self.ui.enableEndDate.isChecked())
+            self.ui.startDateTimeEdit.setDisabled(self.ui.enableEndDate.isChecked())
         self.ui.enableEndDate.stateChanged.connect(_state_changed)
+
+    def _get_last_day_beginning(self, now_time: datetime) -> datetime:
+        (hours, minutes) = self.config.start_date_time.split(':')
+        start_time = now_time.replace(hour=int(hours), minute=int(minutes), second=0)
+        if start_time > now_time:
+            start_time = start_time.replace(day=start_time.day - 1)
+        return start_time
 
     def _run_timer(self) -> None:
         self._run_chart()
@@ -68,10 +76,11 @@ class MainWindow(QtWidgets.QMainWindow):  # type: ignore
 
     def _run_chart(self) -> None:
         analyzer = EventsAnalyzer(self.config)
-        start_date: datetime = self.ui.startDateTimeEdit.dateTime().toPyDateTime()
         if self.ui.enableEndDate.isChecked():
             end_date = datetime.now()
+            start_date = self._get_last_day_beginning(end_date)
         else:
+            start_date = self.ui.startDateTimeEdit.dateTime().toPyDateTime()
             end_date = self.ui.endDateTimeEdit.dateTime().toPyDateTime()
 
         events = analyzer.get_events(start_date, end_date)

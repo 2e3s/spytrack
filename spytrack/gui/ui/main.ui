@@ -59,6 +59,9 @@
          <layout class="QHBoxLayout" name="datePickLayout">
           <item>
            <widget class="QDateTimeEdit" name="startDateTimeEdit">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="dateTime">
              <datetime>
               <hour>0</hour>
@@ -144,7 +147,7 @@
              </sizepolicy>
             </property>
             <property name="text">
-             <string>Now</string>
+             <string>Today</string>
             </property>
             <property name="checked">
              <bool>true</bool>
