@@ -4,6 +4,7 @@ daemon:
 gui:
   run_daemon: true
   interval: 5
+  start_date_time: "5:00"
   projects:
     - name: coding
       rules:
