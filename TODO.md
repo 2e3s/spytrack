@@ -38,7 +38,6 @@
 # Planned fixes
 
 - (1) List of projects and their events should be updated after any start-end time change
-- (1) Decrease AW logging
 - (2) Make AW web-ui link configurable
 - (1) Set minimum window size, unset maximum window size
 
@@ -48,3 +47,4 @@
 - (2) Hide analyzer under facade
 - (2) Hide AW client under a reading repository
 - (1) Add a linter
+- (2) Run windows_watcher_run in a thread

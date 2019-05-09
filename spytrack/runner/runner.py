@@ -18,7 +18,7 @@ class Runner:
     def __init__(self, config: Config) -> None:
         self.config = config
         self.afk_runner = AfkRunner()
-        setup_logging("aw-runner", testing=True, verbose=True, log_stderr=True, log_file=True)
+        setup_logging("aw-runner", testing=False, verbose=False, log_stderr=False, log_file=False)
 
     def run_all(self) -> None:
         if self.config.is_run_server():
