@@ -1,8 +1,6 @@
-from typing import List
 from PyQt5.QtChart import QChartView, QBarSeries, QBarSet, QBarCategoryAxis, QChart, QLegend
 from PyQt5.QtGui import QPainter
-from analyze.matched_event import MatchedEvent
-from analyze.stats import get_pie_chart
+from analyze.stats import PieChartData
 from config import Config
 
 
@@ -19,8 +17,7 @@ class Chart:
 
         self.chart_view.repaint()
 
-    def draw(self, matched_events: List[MatchedEvent]) -> None:
-        chart_data = get_pie_chart(matched_events)
+    def draw(self, chart_data: PieChartData) -> None:
         # series = QPieSeries()
         # for project, duration in chart_data.data.items():
         #     series.append("{} ({} s)".format(project, int(duration)), duration)
@@ -35,7 +32,7 @@ class Chart:
         for project, duration in chart_data.data.items():
             if project == self.config.none_project:
                 project = 'None'
-            categories.append("{} ({} s)".format(project, int(duration)))
+            categories.append(project)
             bar_set.append(duration)
         series.append(bar_set)
         axis_x = QBarCategoryAxis()

@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>589</width>
-    <height>402</height>
+    <width>699</width>
+    <height>705</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -158,6 +158,33 @@
         </item>
         <item>
          <widget class="QChartView" name="chartView"/>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="projectsViewLayout">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QListWidget" name="projectsTimesList">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>30</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QListWidget" name="projectEventsList">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>100</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>
