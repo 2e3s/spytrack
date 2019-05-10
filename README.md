@@ -14,7 +14,11 @@ To track your activities in browsers install the plugin for your browser from
 
 ### From sources
 
-TODO
+In the source folder:
+
+- Full GUI application: `python spytrack --config=./config.default.yaml`
+- Just a tray icon (send stats only): `python spytrack/runner.py --config=./config.default.yaml`
+- Console, no GUI (send stats only): `python spytrack/runner.py --no-tray --config=./config.default.yaml`
 
 ### Build
 
