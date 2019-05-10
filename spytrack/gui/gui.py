@@ -4,7 +4,8 @@ from PyQt5 import QtWidgets
 from PyQt5 import QtCore
 from config import ConfigStorage
 from runner import Runner
-from gui.tray import Tray
+from .tray import Tray
+from .main_window import MainWindow
 
 
 class Gui:
@@ -17,7 +18,15 @@ class Gui:
     def run(self) -> None:
         app = QtWidgets.QApplication(sys.argv)
         with self.stats_runner:
-            tray_icon = Tray(app, self.config_storage, self.stats_runner)
+            tray_icon = Tray(app, MainWindow(self.config_storage, self.stats_runner))
+            tray_icon.show()
+            exit_code = app.exec_()
+        sys.exit(exit_code)
+
+    def run_headless(self) -> None:
+        app = QtWidgets.QApplication(sys.argv)
+        with self.stats_runner:
+            tray_icon = Tray(app)
             tray_icon.show()
             exit_code = app.exec_()
         sys.exit(exit_code)

@@ -28,7 +28,6 @@
 - (2) "Add a rule" dialog to on double-click on project's event
 - (3) Inclusive and exclusive filtering for events on the selected project (for analyzing mismatches).
       Maybe a normal string with ES-like syntax: `+search1 +"search2 complex" -"search exclude"` for simplicity
-- (3) Add tray icon to the simpler runner
 
 ## Projects
 

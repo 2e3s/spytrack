@@ -7,7 +7,7 @@ from config import Config
 def get_config_filename() -> str:
     parser = argparse.ArgumentParser()
     parser.add_argument("--config")
-    args = parser.parse_args()
+    args, _ = parser.parse_known_args()
 
     if args.config is None:
         raise ConfigParseException
