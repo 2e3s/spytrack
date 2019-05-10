@@ -26,7 +26,17 @@ TODO
 
 ### Run tests
 
-TODO unittest, mypy
+Install a git hook to run on commit:
+```
+cat >> .git/hooks/pre-commit  <<EOL
+#!/bin/bash
+
+source venv/bin/activate
+venv/bin/mypy --config-file=mypy.ini --strict spytrack/__main__.py && python -m unittest discover
+exit \$?
+EOL
+chmod +x .git/hooks/pre-commit
+```
 
 ### ActivityWatch
 
