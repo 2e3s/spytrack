@@ -39,7 +39,6 @@
 
 - (1) List of projects and their events should be updated after any start-end time change
 - (2) Make AW web-ui link configurable
-- (1) Set minimum window size, unset maximum window size
 - (2) Redraw chart on Today checkbox or date change
 
 ## Refactoring
