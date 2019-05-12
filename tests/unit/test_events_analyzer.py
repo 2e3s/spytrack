@@ -1,12 +1,11 @@
 import unittest
 from datetime import datetime
 
-from config.config import Rule
 from . dataset import get_events
 from unittest.mock import Mock, MagicMock
 from aw_client import ActivityWatchClient
 from analyze import EventsAnalyzer
-from config import Config, Project
+from config import Config, Project, Rule
 
 
 class TestAnalyzer(unittest.TestCase):

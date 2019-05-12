@@ -1,9 +1,7 @@
 from typing import Callable, Dict
-
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QVBoxLayout
-
-from config.config import Rule
+from config import Rule
 from .ui.rule import Ui_RuleFrame
 
 
@@ -54,7 +52,7 @@ class RuleWidget(QtWidgets.QFrame):  # type: ignore
     def rule(self) -> Rule:
         is_app = self.ui.typesBox.currentIndex() == RuleWidget.RULE_APP
         data = {
-            'id': self._rule['id'],
+            'id': self._rule.id,
             'type': Rule.APP if is_app else Rule.WEB
         }
         if not is_app and len(self.ui.urlEdit.text()):

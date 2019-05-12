@@ -3,16 +3,15 @@ from typing import List, Dict
 
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QListWidgetItem, QLayout, QVBoxLayout
+from PyQt5.QtWidgets import QListWidgetItem, QVBoxLayout
 
 from analyze import EventsAnalyzer
 from analyze.matched_event import MatchedEvent
 from analyze.stats import get_pie_chart, PieChartData
-from config.config import Rule
 from gui.chart import Chart
 from gui.project_widget import ProjectWidget
 from gui.ui.main import Ui_Main
-from config import ConfigStorage, Project
+from config import ConfigStorage, Project, Rule
 from runner import Runner
 
 

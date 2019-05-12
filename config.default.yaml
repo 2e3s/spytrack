@@ -1,12 +1,45 @@
 daemon:
-  host: "http://localhost"
+  host: http://localhost
   port: 9011
 gui:
-  run_daemon: true
   interval: 5
-  start_date_time: "5:00"
   projects:
-    - name: coding
-      rules:
-        - type: app
-          app: pycharm
+  - name: work
+    rules:
+    - type: web
+      url: .*rebilly.*
+    - type: web
+      url: .*intercom.*
+    - app: vivaldi
+      type: web
+      url: .*draw\.io.*
+    - app: phpstorm
+      type: app
+    - app: slack
+      type: app
+    - app: vivaldi
+      type: app
+    - app: yakuake
+      title: .*backend.*
+      type: app
+  - name: coding
+    rules:
+    - app: pycharm
+      type: app
+    - title: Qt Designer
+      type: app
+    - app: DB Browser for SQLite
+      type: app
+    - type: web
+      url: .*qt.io.*
+    - type: web
+      url: python
+    - title: python
+      type: web
+    - title: pyqt
+      type: web
+    - app: code
+      title: .*Visual Studio Code
+      type: app
+  run_daemon: true
+  start_date_time: '5:00'

@@ -7,10 +7,15 @@ class Rule:
     WEB = 'web'
 
     def __init__(self, values: Dict[str, str]) -> None:
-        self.values = {**values, 'id': str(uuid.uuid4())}
+        if 'id' in values:
+            self.id = values['id']
+            del values['id']
+        else:
+            self.id = str(uuid.uuid4())
+        self.values = values
 
     def to_json(self) -> Any:
-        return {field: value for field, value in self.values.items() if field != 'id'}
+        return self.values
 
     def __iter__(self) -> Iterator[Dict[str, str]]:
         return iter(self.to_json())

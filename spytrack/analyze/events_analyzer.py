@@ -3,12 +3,11 @@ from datetime import datetime, timezone
 from typing import Dict, List, Any, Callable
 from aw_client import ActivityWatchClient
 
-from config.config import Rule
 from .event import Event
 from .matched_event import MatchedEvent
 from .bucket_point import BucketPoint
 from .timeline import Timeline
-from config import Config, Project
+from config import Config, Project, Rule
 
 ClientBuckets = Dict[str, Dict[str, Any]]
 Events = List[Event]
@@ -82,10 +81,10 @@ class EventsAnalyzer:
         for event in events:
             match_result = False
             for project in projects:
-                for definition in project.rules:
-                    match_result = self._match_event(event, definition)
+                for rule in project.rules:
+                    match_result = self._match_event(event, rule)
                     if match_result:
-                        matched_events.append(MatchedEvent(project.name, definition['id'], event))
+                        matched_events.append(MatchedEvent(project.name, rule.id, event))
                         break
                 if match_result:
                     break

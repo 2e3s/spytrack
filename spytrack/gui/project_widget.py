@@ -2,8 +2,7 @@ from typing import Callable, List
 
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QVBoxLayout
-from config import Project
-from config.config import Rule
+from config import Project, Rule
 from gui.rule_widget import RuleWidget
 from .ui.project import Ui_ProjectFrame
 
