@@ -67,5 +67,8 @@ setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: Implementation :: CPython',
+        'Operating System :: POSIX :: Linux',
+        # 'Operating System :: Microsoft :: Windows',
+        # 'Operating System :: MacOS',
     ],
 )
