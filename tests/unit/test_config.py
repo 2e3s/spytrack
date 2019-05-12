@@ -23,10 +23,10 @@ class TestConfig(unittest.TestCase):
                 ],
             },
         })
-        self.assertEqual(1, config.get_port())
-        self.assertEqual(3, config.get_interval())
-        self.assertEqual('2', config.get_host())
-        self.assertTrue(config.is_run_server())
+        self.assertEqual(1, config.port)
+        self.assertEqual(3, config.interval)
+        self.assertEqual('2', config.host)
+        self.assertTrue(config.run_daemon)
 
         self.assertEqual(2, len(config.projects))
         self.assertEqual('test1', config.projects[0].name)
@@ -36,11 +36,11 @@ class TestConfig(unittest.TestCase):
         self.assertEqual("Test", config.projects[0].rules[0]["app"])
         self.assertIsNotNone("id" in config.projects[0].rules[0].id)
 
-        config.set_host('20')
-        self.assertEqual('20', config.get_host())
-        config.set_interval(30)
-        self.assertEqual(30, config.get_interval())
-        config.set_port(10)
-        self.assertEqual(10, config.get_port())
-        config.set_run_server(False)
-        self.assertFalse(config.is_run_server())
+        config.host = '20'
+        self.assertEqual('20', config.host)
+        config.interval = 30
+        self.assertEqual(30, config.interval)
+        config.port = 10
+        self.assertEqual(10, config.port)
+        config.run_daemon = False
+        self.assertFalse(config.run_daemon)

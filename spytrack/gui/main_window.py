@@ -37,16 +37,16 @@ class MainWindow(QtWidgets.QMainWindow):  # type: ignore
         self._run_timer()
 
     def _setup_server_settings(self) -> None:
-        self.ui.portBox.setValue(self.config.get_port())
-        self.ui.intervalBox.setValue(self.config.get_interval())
-        self.ui.hostEdit.setText(self.config.get_host())
+        self.ui.portBox.setValue(self.config.port)
+        self.ui.intervalBox.setValue(self.config.interval)
+        self.ui.hostEdit.setText(self.config.host)
 
         def _state_changed() -> None:
             self.ui.hostEdit.setDisabled(self.ui.isLocalServerBox.isChecked())
 
         self.ui.isLocalServerBox.stateChanged.connect(_state_changed)
         self.ui.isLocalServerBox\
-            .setCheckState(QtCore.Qt.Checked if self.config.is_run_server() else QtCore.Qt.Unchecked)
+            .setCheckState(QtCore.Qt.Checked if self.config.run_daemon else QtCore.Qt.Unchecked)
         self.ui.applyButton.clicked.connect(self._modify_config)
 
     def _setup_projects_settings(self) -> None:
@@ -98,7 +98,7 @@ class MainWindow(QtWidgets.QMainWindow):  # type: ignore
         self.timer = QtCore.QTimer()
         self.timer.setSingleShot(False)
         self.timer.timeout.connect(self._run_chart)
-        self.timer.start(self.config.get_interval() * 1000)
+        self.timer.start(self.config.interval * 1000)
 
     def _run_chart(self) -> None:
         analyzer = EventsAnalyzer(self.config)
@@ -164,14 +164,14 @@ class MainWindow(QtWidgets.QMainWindow):  # type: ignore
         self.ui.applyButton.setDisabled(True)
         self.timer.stop()
 
-        self.config.set_port(self.ui.portBox.value())
-        self.config.set_host(self.ui.hostEdit.text())
-        self.config.set_interval(self.ui.intervalBox.value())
-        self.config.set_run_server(self.ui.isLocalServerBox.isChecked())
+        self.config.port = int(self.ui.portBox.value())
+        self.config.host = self.ui.hostEdit.text()
+        self.config.interval = int(self.ui.intervalBox.value())
+        self.config.run_daemon = self.ui.isLocalServerBox.isChecked()
         self.config.projects = self._get_projects()
 
         self.config_storage.save(self.config)
         self.stats_runner.reload(self.config)
         self.chart.reload_config(self.config)
-        self.timer.start(self.config.get_interval() * 1000)
+        self.timer.start(self.config.interval * 1000)
         self.ui.applyButton.setDisabled(False)

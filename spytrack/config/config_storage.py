@@ -33,12 +33,12 @@ class FileConfigStorage:
     def save(self, config: Config) -> None:
         dump = {
             "daemon": {
-                "host": config.get_host(),
-                "port": config.get_port(),
+                "host": config.host,
+                "port": config.port,
             },
             "gui": {
-                "run_daemon": config.is_run_server(),
-                "interval": config.get_interval(),
+                "run_daemon": config.run_daemon,
+                "interval": config.interval,
                 "start_date_time": config.start_date_time,
                 "projects": [project.to_json() for project in config.projects if project.name != config.none_project]
             }

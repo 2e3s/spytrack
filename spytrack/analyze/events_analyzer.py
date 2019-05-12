@@ -104,11 +104,11 @@ class EventsAnalyzer:
 
     @staticmethod
     def app_afk_timeline_condition(afk_event: BucketPoint) -> bool:
-        return bool(afk_event.get_event_data()['status'] == 'not-afk')
+        return bool(afk_event.event_data['status'] == 'not-afk')
 
     @staticmethod
     def app_browser_timeline_condition(app_name: str) -> Callable[[BucketPoint], bool]:
-        return lambda app_event: bool(app_event.get_event_data()['app'] == app_name)
+        return lambda app_event: bool(app_event.event_data['app'] == app_name)
 
     @staticmethod
     def _match_browser_buckets(

@@ -29,8 +29,8 @@ class Timeline:
 
     def __init__(self, bucket_type: BucketType, points: BucketPoints):
         self._bucket_type = bucket_type
-        self._points = points
-        self._points.sort()
+        self.points = points
+        self.points.sort()
 
     def intersect(self, spec_timeline: 'Timeline', intersect_condition: CutCondition, inclusive: bool = True) -> None:
         """
@@ -40,8 +40,8 @@ class Timeline:
         :param inclusive: If False then those points are returned which don't belong to the intersection
         :return: All points of the current timeline which intersect (or not if exclusively) the given timeline
         """
-        points = self._points.copy()
-        for point in spec_timeline._points:
+        points = self.points.copy()
+        for point in spec_timeline.points:
             points.append(point)
         points.sort()
 
@@ -49,25 +49,25 @@ class Timeline:
         include = not inclusive
         opened_point = None
         for point in points:
-            if point.get_event_type() == spec_timeline._bucket_type:
+            if point.event_type == spec_timeline._bucket_type:
                 if not intersect_condition(point):
                     continue
                 if point.is_end():
                     include = not inclusive
                     if opened_point is not None:
                         cut_points.append(BucketPoint(
-                            opened_point.get_event_type(),
-                            point.get_timestamp(),
-                            opened_point.get_event(),
+                            opened_point.event_type,
+                            point.timestamp,
+                            opened_point.event,
                             inclusive
                         ))
                 else:
                     include = inclusive
                     if opened_point is not None:
                         cut_points.append(BucketPoint(
-                            opened_point.get_event_type(),
-                            point.get_timestamp(),
-                            opened_point.get_event(),
+                            opened_point.event_type,
+                            point.timestamp,
+                            opened_point.event,
                             not inclusive
                         ))
             else:
@@ -79,67 +79,64 @@ class Timeline:
                     opened_point = None
 
         if len(cut_points) > 0:
-            current_time = cut_points[-1].get_timestamp()
+            current_time = cut_points[-1].timestamp
             close_points: Dict[int, BucketPoint] = {}
             for i in reversed(range(len(cut_points))):
                 point = cut_points[i]
-                if point.get_timestamp() != current_time:
+                if point.timestamp != current_time:
                     close_points.clear()
-                    current_time = point.get_timestamp()
+                    current_time = point.timestamp
                 if point.is_end():
                     close_points[i] = point
                 elif len(close_points) > 0:
                     for index, opened_point in close_points.items():
-                        if point.get_event() is opened_point.get_event():
+                        if point.event is opened_point.event:
                             del cut_points[index]
                             del cut_points[i]
 
-        self._points = cut_points
-
-    def get_points(self) -> BucketPoints:
-        return self._points
+        self.points = cut_points
 
     def get_browser_app(self, app_bucket_events: 'Timeline') -> Optional[str]:
-        for point in self._points:
-            app_point = app_bucket_events._get_event_at(point.get_timestamp())
+        for point in self.points:
+            app_point = app_bucket_events._get_event_at(point.timestamp)
             if app_point is None:
                 continue
-            if app_point.get_event_data()['title'].startswith(point.get_event_data()['title']):
-                return str(app_point.get_event_data()['app'])
+            if app_point.event_data['title'].startswith(point.event_data['title']):
+                return str(app_point.event_data['app'])
         return None
 
     def _get_event_at(self, at_time: datetime.datetime) -> Union[BucketPoint, None]:
         last_event = None
-        for point in self._points:
+        for point in self.points:
             if point.is_end():
                 continue
             if last_event is None:
-                if point.get_timestamp() > at_time:
+                if point.timestamp > at_time:
                     return None  # we don't know about the event before the 1st event in the timeline
-            elif at_time < point.get_timestamp():
+            elif at_time < point.timestamp:
                 return last_event
             last_event = point
         return None
 
     def get_events(self) -> Events:
         events = []
-        for open_i in range(len(self._points)):
-            open_point = self._points[open_i]
+        for open_i in range(len(self.points)):
+            open_point = self.points[open_i]
             if open_point.is_end():
                 continue
-            for close_i in range(open_i + 1, len(self._points)):
-                close_point = self._points[close_i]
+            for close_i in range(open_i + 1, len(self.points)):
+                close_point = self.points[close_i]
                 if not close_point.is_end():
                     continue
-                if open_point.get_event() is close_point.get_event():
-                    old_event = open_point.get_event()
+                if open_point.event is close_point.event:
+                    old_event = open_point.event
                     event = ParentEvent(
                         old_event.id,
-                        open_point.get_timestamp(),
-                        close_point.get_timestamp() - open_point.get_timestamp(),
+                        open_point.timestamp,
+                        close_point.timestamp - open_point.timestamp,
                         old_event.data
                     )
-                    events.append(Event(event, open_point.get_event_type()))
+                    events.append(Event(event, open_point.event_type))
                     break
 
         return events

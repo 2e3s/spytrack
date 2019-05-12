@@ -1,5 +1,5 @@
 from typing import List, Dict
-from analyze.matched_event import MatchedEvent
+from .matched_event import MatchedEvent
 
 
 class PieChartData:

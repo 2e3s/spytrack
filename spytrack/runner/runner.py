@@ -21,7 +21,7 @@ class Runner:
         setup_logging("aw-runner", testing=False, verbose=False, log_stderr=False, log_file=False)
 
     def run_all(self) -> None:
-        if self.config.is_run_server():
+        if self.config.run_daemon:
             self.process_server = multiprocessing.Process(target=server_run)
             self.process_server.start()
             sleep(1)

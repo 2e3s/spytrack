@@ -40,10 +40,10 @@ class TestFileConfigStorage(unittest.TestCase):
             load_storage = FileConfigStorage(filename)
             load_config = load_storage.load()
 
-            self.assertEqual("http://save.test", load_config.get_host())
-            self.assertEqual(100, load_config.get_port())
-            self.assertEqual(3, load_config.get_interval())
-            self.assertTrue(load_config.is_run_server())
+            self.assertEqual("http://save.test", load_config.host)
+            self.assertEqual(100, load_config.port)
+            self.assertEqual(3, load_config.interval)
+            self.assertTrue(load_config.run_daemon)
             self.assertEqual(2, len(load_config.projects))
             self.assertEqual(load_config.none_project, load_config.projects[1].name)
 

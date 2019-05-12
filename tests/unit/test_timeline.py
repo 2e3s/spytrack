@@ -131,18 +131,18 @@ class TestTimeline(unittest.TestCase):
         ])
 
     def assert_timeline(self, timeline: Timeline, check_points: TimelineResults) -> None:
-        self.assertEqual(len(check_points), len(timeline._points))
+        self.assertEqual(len(check_points), len(timeline.points))
         for i in range(0, len(check_points)):
             check = check_points[i]
-            point = timeline._points[i]
-            self.assertEqual(check[0], point.get_event_data()['app'])
-            self.assertEqual(check[1], point.get_timestamp().second, point.get_event_data()['app'])
-            self.assertEqual(check[2], point.is_end(), point.get_event_data()['app'])
+            point = timeline.points[i]
+            self.assertEqual(check[0], point.event_data['app'])
+            self.assertEqual(check[1], point.timestamp.second, point.event_data['app'])
+            self.assertEqual(check[2], point.is_end(), point.event_data['app'])
 
     def test_get_events(self) -> None:
         original_events = get_events('window')
         app_timeline = Timeline.create_from_bucket_events('currentwindow', original_events)
-        self.assertEqual(8, len(app_timeline.get_points()))
+        self.assertEqual(8, len(app_timeline.points))
         generated_events = app_timeline.get_events()
         self.assertEqual(4, len(generated_events))
         for i in range(len(original_events)):
