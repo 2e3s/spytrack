@@ -1,20 +1,53 @@
 import uuid
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Iterator
+
+
+class Rule:
+    APP = 'app'
+    WEB = 'web'
+
+    def __init__(self, values: Dict[str, str]) -> None:
+        self.values = {**values, 'id': str(uuid.uuid4())}
+
+    def to_json(self) -> Any:
+        return {field: value for field, value in self.values.items() if field != 'id'}
+
+    def __iter__(self) -> Iterator[Dict[str, str]]:
+        return iter(self.to_json())
+
+    def __getitem__(self, item: str) -> str:
+        return self.values[item]
+
+    def __contains__(self, item: str) -> bool:
+        return item in self.values
+
+    def __len__(self) -> int:
+        return len(self.values)
+
+    def is_web(self) -> bool:
+        return self.values['type'] == Rule.WEB
+
+    def is_app(self) -> bool:
+        return self.values['type'] == Rule.APP
 
 
 class Project:
     @staticmethod
     def reinstate(config_project: Any) -> 'Project':
-        return Project(config_project['name'], config_project['rules'])
+        return Project(config_project['name'], [Rule(rule) for rule in config_project['rules']])
 
-    def __init__(self, name: str, rules: List[Dict[str, str]]) -> None:
-        self.rules = [{**rule, 'id': str(uuid.uuid4())} for rule in rules]
+    @staticmethod
+    def create_empty(none_project: str) -> 'Project':
+        return Project(none_project, [])
+
+    def __init__(self, name: str, rules: List[Rule]) -> None:
+        self.rules = rules
         self.name = name
 
     def to_json(self) -> Any:
         return {
             'name': self.name,
-            'rules': [{field: value for field, value in rule.items() if field != 'id'} for rule in self.rules]
+            'rules': [rule.to_json() for rule in self.rules]
         }
 
 
@@ -31,7 +64,7 @@ class Config:
         self.start_date_time = str(values['gui']['start_date_time'])
         self.none_project = str(uuid.uuid4())
         self.projects = [Project.reinstate(project) for project in values['gui']['projects']]
-        self.projects.append(Project(self.none_project, []))
+        self.projects.append(Project.create_empty(self.none_project))
 
     def get_full_address(self) -> str:
         return '%s:%s' % (self.get_host(), self.get_port())

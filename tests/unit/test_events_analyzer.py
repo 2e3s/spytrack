@@ -1,6 +1,7 @@
 import unittest
 from datetime import datetime
 
+from config.config import Rule
 from . dataset import get_events
 from unittest.mock import Mock, MagicMock
 from aw_client import ActivityWatchClient
@@ -64,7 +65,7 @@ class TestAnalyzer(unittest.TestCase):
             self.assertEqual(check[2], event.duration.seconds, event.data['title'])
 
         matched_events = analyzer.match(events, [
-            Project('test1', [{'id': '1', 'type': 'app', 'app': 'Browser'}])
+            Project('test1', [Rule({'id': '1', 'type': 'app', 'app': 'Browser'})])
         ], 'none')
         check_matched_events = [
             ('nothing2', None),

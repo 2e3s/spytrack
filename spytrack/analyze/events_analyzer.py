@@ -2,6 +2,8 @@ import re
 from datetime import datetime, timezone
 from typing import Dict, List, Any, Callable
 from aw_client import ActivityWatchClient
+
+from config.config import Rule
 from .event import Event
 from .matched_event import MatchedEvent
 from .bucket_point import BucketPoint
@@ -92,7 +94,7 @@ class EventsAnalyzer:
 
         return matched_events
 
-    def _match_event(self, event: Event, definition: Dict[str, Any]) -> bool:
+    def _match_event(self, event: Event, definition: Rule) -> bool:
         if 'url' in definition and 'url' in event.data:
             return re.search(definition['url'], event.data['url'], flags=re.IGNORECASE) is not None
         if 'title' in definition and 'title' in event.data:

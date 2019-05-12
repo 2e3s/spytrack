@@ -4,6 +4,7 @@ from aw_core.models import Event
 from time import sleep
 from platform import system
 import os
+
 if system() == "Windows":
     from aw_watcher_afk.windows import seconds_since_last_input
 elif system() == "Darwin":

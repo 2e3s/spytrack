@@ -7,6 +7,7 @@
 - (3) Add pomidoro technique
 - (2) Mark web events with browser app
 - (2) Self-tracking on click in tray or shortcut (takes more priority over other events)
+- (3) Add tags over projects
 
 ## Optimization
 

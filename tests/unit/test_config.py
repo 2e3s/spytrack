@@ -34,7 +34,7 @@ class TestConfig(unittest.TestCase):
         self.assertEqual(1, len(config.projects[0].rules))
         self.assertEqual(2, len(config.projects[0].rules[0]))
         self.assertEqual("Test", config.projects[0].rules[0]["app"])
-        self.assertTrue("id" in config.projects[0].rules[0])
+        self.assertIsNotNone("id" in config.projects[0].rules[0]['id'])
 
         config.set_host('20')
         self.assertEqual('20', config.get_host())
