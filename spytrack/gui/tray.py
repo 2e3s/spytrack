@@ -5,9 +5,15 @@ from gui.main_window import MainWindow
 
 
 class Tray(QSystemTrayIcon):  # type: ignore
-    def __init__(self, parent: QtCore.QObject, main_window: Optional[MainWindow] = None) -> None:
+    def __init__(self,
+                 parent: QtCore.QObject,
+                 main_window: Optional[MainWindow] = None
+                 ) -> None:
         super().__init__(parent)
-        self.setIcon(QApplication.style().standardIcon(QtWidgets.QStyle.SP_ComputerIcon))
+        self.setIcon(QApplication
+                     .style()
+                     .standardIcon(QtWidgets.QStyle.SP_ComputerIcon)
+                     )
 
         quit_action = QAction("Exit", parent)
         quit_action.triggered.connect(qApp.quit)
@@ -17,12 +23,15 @@ class Tray(QSystemTrayIcon):  # type: ignore
             self._create_main_window(main_window, self.tray_menu)
         self.tray_menu.addAction(quit_action)
 
-    def _create_main_window(self, main_window: MainWindow, tray_menu: QMenu) -> None:
-            self.main_window = main_window
-            show_action = QAction("Show/Hide", self.main_window)
-            show_action.triggered.connect(self._show_hide_main_window)
-            tray_menu.addAction(show_action)
-            self.activated.connect(self._left_click)
+    def _create_main_window(self,
+                            main_window: MainWindow,
+                            tray_menu: QMenu
+                            ) -> None:
+        self.main_window = main_window
+        show_action = QAction("Show/Hide", self.main_window)
+        show_action.triggered.connect(self._show_hide_main_window)
+        tray_menu.addAction(show_action)
+        self.activated.connect(self._left_click)
 
     def _left_click(self, reason: int) -> None:
         if reason == QSystemTrayIcon.Trigger:

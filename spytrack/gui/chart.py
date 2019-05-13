@@ -1,4 +1,5 @@
-from PyQt5.QtChart import QChartView, QBarSeries, QBarSet, QBarCategoryAxis, QChart, QLegend
+from PyQt5.QtChart import QChartView, QBarSeries, QBarSet, \
+    QBarCategoryAxis, QChart, QLegend
 from PyQt5.QtGui import QPainter
 from analyze.stats import PieChartData
 from config import Config
@@ -20,7 +21,7 @@ class Chart:
     def draw(self, chart_data: PieChartData) -> None:
         # series = QPieSeries()
         # for project, duration in chart_data.data.items():
-        #     series.append("{} ({} s)".format(project, int(duration)), duration)
+        #   series.append("{} ({} s)".format(project, int(duration)), duration)
         # self.chart_view.setRenderHint(QPainter.Antialiasing)
         # self.chart_view.chart().removeAllSeries()
         # self.chart_view.chart().addSeries(series)

@@ -6,7 +6,12 @@ from gui import Gui
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--no-tray", dest='no_tray', action='store_true', default=False)
+    parser.add_argument(
+        "--no-tray",
+        dest='no_tray',
+        action='store_true',
+        default=False
+    )
     args, _ = parser.parse_known_args()
 
     config_storage = ConfigStorage(get_config_filename())

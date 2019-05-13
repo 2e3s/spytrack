@@ -1,1 +1,1 @@
-from .events_analyzer import EventsAnalyzer
+from .events_analyzer import EventsAnalyzer  # noqa

@@ -1,5 +1,5 @@
 import datetime
-from typing import Callable, List, Optional, Union, Dict
+from typing import Callable, List, Optional, Dict
 from aw_core import Event as ParentEvent
 from .event import Event
 from .bucket_point import BucketPoint
@@ -13,11 +13,16 @@ class Timeline:
     CutCondition = Callable[[BucketPoint], bool]
 
     @staticmethod
-    def create_from_bucket_events(bucket_type_str: str, events: Events) -> 'Timeline':
+    def create_from_bucket_events(bucket_type_str: str,
+                                  events: Events
+                                  ) -> 'Timeline':
         all_points = []
         bucket_type = BucketType.create(bucket_type_str)
         for event in events:
-            all_points.append(BucketPoint(bucket_type, event.timestamp, event, False))
+            all_points.append(BucketPoint(bucket_type,
+                                          event.timestamp,
+                                          event,
+                                          False))
             all_points.append(BucketPoint(
                 bucket_type,
                 event.timestamp + event.duration,
@@ -32,13 +37,21 @@ class Timeline:
         self.points = points
         self.points.sort()
 
-    def intersect(self, spec_timeline: 'Timeline', intersect_condition: CutCondition, inclusive: bool = True) -> None:
+    def intersect(self,
+                  spec_timeline: 'Timeline',
+                  intersect_condition: CutCondition,
+                  inclusive: bool = True
+                  ) -> None:
         """
         Finds an intersection of 2 timelines.
+
         :param spec_timeline: Timeline to compare against
-        :param intersect_condition: Conditional function which defines which points in spec_timeline are considered
-        :param inclusive: If False then those points are returned which don't belong to the intersection
-        :return: All points of the current timeline which intersect (or not if exclusively) the given timeline
+        :param intersect_condition: Conditional function which defines
+            which points in spec_timeline are considered
+        :param inclusive: If False then those points are returned
+            which don't belong to the intersection
+        :return: All points of the current timeline which intersect
+            (or not if exclusively) the given timeline
         """
         points = self.points.copy()
         for point in spec_timeline.points:
@@ -101,18 +114,23 @@ class Timeline:
             app_point = app_bucket_events._get_event_at(point.timestamp)
             if app_point is None:
                 continue
-            if app_point.event_data['title'].startswith(point.event_data['title']):
+            app_point_title = app_point.event_data['title']
+            point_title = point.event_data['title']
+            if app_point_title.startswith(point_title):
                 return str(app_point.event_data['app'])
         return None
 
-    def _get_event_at(self, at_time: datetime.datetime) -> Union[BucketPoint, None]:
+    def _get_event_at(self,
+                      at_time: datetime.datetime) -> Optional[BucketPoint]:
         last_event = None
         for point in self.points:
             if point.is_end():
                 continue
             if last_event is None:
                 if point.timestamp > at_time:
-                    return None  # we don't know about the event before the 1st event in the timeline
+                    # we don't know about the event
+                    # before the 1st event in the timeline
+                    return None
             elif at_time < point.timestamp:
                 return last_event
             last_event = point

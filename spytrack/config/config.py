@@ -39,7 +39,9 @@ class Rule:
 class Project:
     @staticmethod
     def reinstate(config_project: Any) -> 'Project':
-        return Project(config_project['name'], [Rule(rule) for rule in config_project['rules']])
+        return Project(config_project['name'],
+                       [Rule(rule) for rule in config_project['rules']]
+                       )
 
     @staticmethod
     def create_empty(none_project: str) -> 'Project':
@@ -68,7 +70,9 @@ class Config:
         self.run_daemon = bool(values['gui']['run_daemon'])
         self.start_date_time = str(values['gui']['start_date_time'])
         self.none_project = str(uuid.uuid4())
-        self.projects = [Project.reinstate(project) for project in values['gui']['projects']]
+        self.projects = [Project.reinstate(project)
+                         for project
+                         in values['gui']['projects']]
         self.projects.append(Project.create_empty(self.none_project))
 
     def get_full_address(self) -> str:

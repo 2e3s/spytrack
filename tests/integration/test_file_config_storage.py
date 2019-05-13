@@ -2,6 +2,7 @@ import unittest
 
 import yaml
 
+from config import Project, Rule
 from tests.integration import get_current_directory
 from pathlib import Path
 from config.config_storage import FileConfigStorage, Config
@@ -46,6 +47,8 @@ class TestFileConfigStorage(unittest.TestCase):
             self.assertTrue(load_config.run_daemon)
             self.assertEqual(2, len(load_config.projects))
             self.assertEqual(load_config.none_project, load_config.projects[1].name)
+            self.assertIsInstance(load_config.projects[0], Project)
+            self.assertIsInstance(load_config.projects[0].rules[0], Rule)
 
             saved_yaml = yaml.safe_load(file.read_text())
             self.assertEqual(initial_yaml, saved_yaml)

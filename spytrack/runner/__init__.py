@@ -1,1 +1,1 @@
-from runner.runner import Runner
+from runner.runner import Runner  # noqa

@@ -31,7 +31,10 @@ class RuleWidget(QtWidgets.QFrame):  # type: ignore
 
         self.ui.typesBox.currentIndexChanged.connect(self._type_box_changed)
 
-    def register_callbacks(self, add_rule: Callable[[], None], remove_rule: Callable[[], None]) -> None:
+    def register_callbacks(self,
+                           add_rule: Callable[[], None],
+                           remove_rule: Callable[[], None]
+                           ) -> None:
         self.ui.addButton.clicked.connect(add_rule)
         self.ui.removeButton.clicked.connect(remove_rule)
 

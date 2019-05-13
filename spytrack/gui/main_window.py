@@ -14,12 +14,17 @@ from gui.ui.main import Ui_Main
 from config import ConfigStorage, Project, Rule
 from runner import Runner
 
+WidgetItems = List[QListWidgetItem]
+
 
 class MainWindow(QtWidgets.QMainWindow):  # type: ignore
     ui: Ui_Main
     last_matched_events: List[MatchedEvent]
 
-    def __init__(self, config_storage: ConfigStorage, stats_runner: Runner) -> None:
+    def __init__(self,
+                 config_storage: ConfigStorage,
+                 stats_runner: Runner
+                 ) -> None:
         super().__init__()
         self.stats_runner = stats_runner
         self.config = config_storage.load()
@@ -28,7 +33,9 @@ class MainWindow(QtWidgets.QMainWindow):  # type: ignore
         self.ui.setupUi(self)  # type: ignore
         self.chart = Chart(self.config, self.ui.chartView)
 
-        self.ui.projectsTimesList.itemSelectionChanged.connect(self._update_project_events)
+        self.ui.projectsTimesList.itemSelectionChanged.connect(
+            self._update_project_events
+        )
         self.last_matched_events = []
 
         self._setup_projects_settings()
@@ -45,8 +52,9 @@ class MainWindow(QtWidgets.QMainWindow):  # type: ignore
             self.ui.hostEdit.setDisabled(self.ui.isLocalServerBox.isChecked())
 
         self.ui.isLocalServerBox.stateChanged.connect(_state_changed)
-        self.ui.isLocalServerBox\
-            .setCheckState(QtCore.Qt.Checked if self.config.run_daemon else QtCore.Qt.Unchecked)
+        self.ui.isLocalServerBox.setCheckState(QtCore.Qt.Checked
+                                               if self.config.run_daemon
+                                               else QtCore.Qt.Unchecked)
         self.ui.applyButton.clicked.connect(self._modify_config)
 
     def _setup_projects_settings(self) -> None:
@@ -57,12 +65,18 @@ class MainWindow(QtWidgets.QMainWindow):  # type: ignore
             project_widget = self._create_project_widget(layout, project)
             layout.addWidget(project_widget)
 
-    def _create_project_widget(self, layout: QVBoxLayout, project: Project) -> ProjectWidget:
+    def _create_project_widget(self,
+                               layout: QVBoxLayout,
+                               project: Project) -> ProjectWidget:
         project_widget = ProjectWidget(project)
         project_widget.register_callbacks(
             lambda: layout.insertWidget(  # type: ignore
                 layout.indexOf(project_widget),
-                self._create_project_widget(layout, Project('', [Rule({'type': 'app'})]))
+                self._create_project_widget(layout,
+                                            Project('',
+                                                    [Rule({'type': 'app'})]
+                                                    )
+                                            )
             ),
             lambda: project_widget.remove_from(layout)
         )
@@ -70,7 +84,9 @@ class MainWindow(QtWidgets.QMainWindow):  # type: ignore
 
     def _get_projects(self) -> List[Project]:
         layout: QVBoxLayout = self.ui.projectsBox.layout()
-        widgets: List[ProjectWidget] = [layout.itemAt(i).widget() for i in range(0, layout.count())]
+        widgets: List[ProjectWidget] = [layout.itemAt(i).widget()
+                                        for i
+                                        in range(0, layout.count())]
         return [widget.project for widget in widgets]
 
     def _setup_datetime(self) -> None:
@@ -82,13 +98,16 @@ class MainWindow(QtWidgets.QMainWindow):  # type: ignore
         self.ui.endDateTimeEdit.setDateTime(end_time.replace())
 
         def _state_changed() -> None:
-            self.ui.endDateTimeEdit.setDisabled(self.ui.disableDateRange.isChecked())
-            self.ui.startDateTimeEdit.setDisabled(self.ui.disableDateRange.isChecked())
+            is_range_disabled = self.ui.disableDateRange.isChecked()
+            self.ui.endDateTimeEdit.setDisabled(is_range_disabled)
+            self.ui.startDateTimeEdit.setDisabled(is_range_disabled)
         self.ui.disableDateRange.stateChanged.connect(_state_changed)
 
     def _get_last_day_beginning(self, now_time: datetime) -> datetime:
         (hours, minutes) = self.config.start_date_time.split(':')
-        start_time = now_time.replace(hour=int(hours), minute=int(minutes), second=0)
+        start_time = now_time.replace(hour=int(hours),
+                                      minute=int(minutes),
+                                      second=0)
         if start_time > now_time:
             start_time = start_time.replace(day=start_time.day - 1)
         return start_time
@@ -110,14 +129,16 @@ class MainWindow(QtWidgets.QMainWindow):  # type: ignore
             end_date = self.ui.endDateTimeEdit.dateTime().toPyDateTime()
 
         events = analyzer.get_events(start_date, end_date)
-        self.last_matched_events = analyzer.match(events, self.config.projects, self.config.none_project)
+        self.last_matched_events = analyzer.match(events,
+                                                  self.config.projects,
+                                                  self.config.none_project)
         chart_data = get_pie_chart(self.last_matched_events)
         self.chart.draw(chart_data)
         self._run_projects(chart_data)
 
     def _update_project_events(self) -> None:
         self.ui.projectEventsList.clear()
-        selected_items: List[QListWidgetItem] = self.ui.projectsTimesList.selectedItems()
+        selected_items: WidgetItems = self.ui.projectsTimesList.selectedItems()
         if len(selected_items) < 1:
             return
         if len(self.last_matched_events) < 1:
@@ -127,8 +148,11 @@ class MainWindow(QtWidgets.QMainWindow):  # type: ignore
         items = []
         for event in self.last_matched_events[::-1]:
             if event.project == selected_project:
-                text = ', '.join(["{}={}".format(key, value) for key, value in event.event.data.items()])
-                text = '{}: {}'.format(int(event.event.duration.total_seconds()), text)
+                text = ', '.join(["{}={}".format(key, value)
+                                  for key, value
+                                  in event.event.data.items()])
+                duration = int(event.event.duration.total_seconds())
+                text = '{}: {}'.format(duration, text)
                 items.append(text)
                 i += 1
                 if i > 500:

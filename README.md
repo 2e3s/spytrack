@@ -36,7 +36,9 @@ cat >> .git/hooks/pre-commit  <<EOL
 #!/bin/bash
 
 source venv/bin/activate
-venv/bin/mypy --config-file=mypy.ini --strict spytrack/__main__.py && python -m unittest discover
+venv/bin/mypy --config-file=mypy.ini --strict spytrack/__main__.py \
+    && python -m unittest discover \
+    && flake8 spytrack/ --exclude spytrack/gui/ui
 exit \$?
 EOL
 chmod +x .git/hooks/pre-commit

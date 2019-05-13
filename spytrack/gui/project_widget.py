@@ -21,7 +21,10 @@ class ProjectWidget(QtWidgets.QFrame):  # type: ignore
             rule_widget = self._create_rule_widget(layout, rule)
             layout.addWidget(rule_widget)
 
-    def _create_rule_widget(self, layout: QVBoxLayout, rule: Rule) -> RuleWidget:
+    def _create_rule_widget(self,
+                            layout: QVBoxLayout,
+                            rule: Rule
+                            ) -> RuleWidget:
         rule_widget = RuleWidget(rule)
         rule_widget.register_callbacks(
             lambda: layout.insertWidget(  # type: ignore
@@ -33,7 +36,10 @@ class ProjectWidget(QtWidgets.QFrame):  # type: ignore
 
         return rule_widget
 
-    def register_callbacks(self, add_rule: Callable[[], None], remove_rule: Callable[[], None]) -> None:
+    def register_callbacks(self,
+                           add_rule: Callable[[], None],
+                           remove_rule: Callable[[], None]
+                           ) -> None:
         self.ui.addButton.clicked.connect(add_rule)
         self.ui.removeButton.clicked.connect(remove_rule)
 
@@ -46,5 +52,9 @@ class ProjectWidget(QtWidgets.QFrame):  # type: ignore
     def project(self) -> Project:
         name = self.ui.nameEdit.text()
         layout: QVBoxLayout = self.ui.rulesBox.layout()
-        rule_widgets: List[RuleWidget] = [layout.itemAt(i).widget() for i in range(0, layout.count())]
-        return Project(name, [rule_widget.rule for rule_widget in rule_widgets])
+        rule_widgets: List[RuleWidget] = [layout.itemAt(i).widget()
+                                          for i
+                                          in range(0, layout.count())]
+        return Project(name, [rule_widget.rule
+                              for rule_widget
+                              in rule_widgets])

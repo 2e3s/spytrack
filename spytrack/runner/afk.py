@@ -23,16 +23,28 @@ def afk_watcher_run() -> None:
 class AfkRunner:
     def __init__(self, poll_time: int = 5, timeout: int = 180) -> None:
         self.client = ActivityWatchClient("aw-watcher-afk", testing=False)
-        self.bucketname = "{}_{}".format(self.client.client_name, self.client.client_hostname)
+        self.bucketname = "{}_{}".format(
+            self.client.client_name,
+            self.client.client_hostname
+        )
         self.poll_time = poll_time
         self.timeout = timeout
         self.initiated_shutdown: bool = False
 
-    def ping(self, afk: bool, timestamp: datetime, duration: float = 0) -> None:
+    def ping(self,
+             afk: bool,
+             timestamp: datetime,
+             duration: float = 0
+             ) -> None:
         data = {"status": "afk" if afk else "not-afk"}
         e = Event(timestamp=timestamp, duration=duration, data=data)
         pulsetime = self.timeout + self.poll_time
-        self.client.heartbeat(self.bucketname, e, pulsetime=pulsetime, queued=True)
+        self.client.heartbeat(
+            self.bucketname,
+            e,
+            pulsetime=pulsetime,
+            queued=True
+        )
 
     def run(self) -> None:
         # Initialization
@@ -70,11 +82,19 @@ class AfkRunner:
                 elif not afk and seconds_since_input >= self.timeout:
                     self.ping(afk, timestamp=last_input)
                     afk = True
-                    self.ping(afk, timestamp=last_input, duration=seconds_since_input)
+                    self.ping(
+                        afk,
+                        timestamp=last_input,
+                        duration=seconds_since_input
+                    )
                 # Send a heartbeat if no state change was made
                 else:
                     if afk:
-                        self.ping(afk, timestamp=last_input, duration=seconds_since_input)
+                        self.ping(
+                            afk,
+                            timestamp=last_input,
+                            duration=seconds_since_input
+                        )
                     else:
                         self.ping(afk, timestamp=last_input)
 

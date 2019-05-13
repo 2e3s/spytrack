@@ -20,13 +20,16 @@ class TestAnalyzer(unittest.TestCase):
             'afk': {'type': 'afkstatus'},
             'browser': {'type': 'web.tab.current'},
         }
-        client_mock.get_events = MagicMock(side_effect=lambda bucket_id, *args: get_events(bucket_id))
+        client_mock.get_events = MagicMock(
+            side_effect=lambda bucket_id, *args: get_events(bucket_id)
+        )
 
         config: Config = Mock()
 
         analyzer = EventsAnalyzer(config, client_mock)
         now_time = datetime.now()
-        events = analyzer.get_events(now_time.replace(day=now_time.day-1), now_time.replace(day=now_time.day+1))
+        events = analyzer.get_events(now_time.replace(day=now_time.day-1),
+                                     now_time.replace(day=now_time.day+1))
 
         # Application on non-afk
         # [(5, {'app': 'Another2', 'title': 'whatever'}, False),
@@ -59,12 +62,16 @@ class TestAnalyzer(unittest.TestCase):
         for i in range(0, len(check_events)):
             check = check_events[i]
             event = events[i]
-            self.assertEqual(check[0], event.data['title'])
-            self.assertEqual(check[1], event.timestamp.second, event.data['title'])
-            self.assertEqual(check[2], event.duration.seconds, event.data['title'])
+            self.assertEqual(check[0],
+                             event.data['title'])
+            self.assertEqual(check[1],
+                             event.timestamp.second, event.data['title'])
+            self.assertEqual(check[2],
+                             event.duration.seconds, event.data['title'])
 
         matched_events = analyzer.match(events, [
-            Project('test1', [Rule({'id': '1', 'type': 'app', 'app': 'Browser'})])
+            Project('test1',
+                    [Rule({'id': '1', 'type': 'app', 'app': 'Browser'})])
         ], 'none')
         check_matched_events = [
             ('nothing2', None),
@@ -75,4 +82,5 @@ class TestAnalyzer(unittest.TestCase):
         for i in range(0, len(check_matched_events)):
             matched_check = check_matched_events[i]
             matched_event = matched_events[i]
-            self.assertEqual(matched_check[0], matched_event.event.data['title'])
+            self.assertEqual(matched_check[0],
+                             matched_event.event.data['title'])

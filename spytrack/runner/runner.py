@@ -18,7 +18,13 @@ class Runner:
     def __init__(self, config: Config) -> None:
         self.config = config
         self.afk_runner = AfkRunner()
-        setup_logging("aw-runner", testing=False, verbose=False, log_stderr=False, log_file=False)
+        setup_logging(
+            "aw-runner",
+            testing=False,
+            verbose=False,
+            log_stderr=False,
+            log_file=False
+        )
 
     def run_all(self) -> None:
         if self.config.run_daemon:
@@ -30,7 +36,9 @@ class Runner:
         self.thread_watcher_awk.start()
 
         # TODO.md make it a thread
-        self.process_watcher_windows = multiprocessing.Process(target=windows_watcher_run)
+        self.process_watcher_windows = multiprocessing.Process(
+            target=windows_watcher_run
+        )
         self.process_watcher_windows.start()
 
     def reload(self, config: Config) -> None:

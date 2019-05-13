@@ -40,7 +40,10 @@ class FileConfigStorage:
                 "run_daemon": config.run_daemon,
                 "interval": config.interval,
                 "start_date_time": config.start_date_time,
-                "projects": [project.to_json() for project in config.projects if project.name != config.none_project]
+                "projects": [project.to_json()
+                             for project
+                             in config.projects
+                             if project.name != config.none_project]
             }
         }
         with open(self.filename, 'w') as outfile:
