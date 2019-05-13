@@ -38,7 +38,6 @@ cat >> .git/hooks/pre-commit  <<EOL
 source venv/bin/activate
 make test
 exit \$?
-EOL
 chmod +x .git/hooks/pre-commit
 ```
 
