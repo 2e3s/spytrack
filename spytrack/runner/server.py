@@ -12,7 +12,7 @@ def server_run() -> None:
         testing=False,
         cors_origins=[]
     )
-    app.static_folder = '/home/demi/Downloads/activitywatch/aw_server/static/'
+    app.static_folder = '../aw_server/static/'
     app.run(
         debug=False,
         host='localhost',
