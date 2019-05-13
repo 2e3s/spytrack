@@ -104,7 +104,7 @@ class MainWindow(QtWidgets.QMainWindow):  # type: ignore
         self.ui.disableDateRange.stateChanged.connect(_state_changed)
 
     def _get_last_day_beginning(self, now_time: datetime) -> datetime:
-        (hours, minutes) = self.config.start_date_time.split(':')
+        (hours, minutes) = self.config.start_day_time.split(':')
         start_time = now_time.replace(hour=int(hours),
                                       minute=int(minutes),
                                       second=0)

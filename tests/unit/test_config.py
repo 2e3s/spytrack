@@ -14,7 +14,7 @@ class TestConfig(unittest.TestCase):
             "gui": {
                 "run_daemon": True,
                 "interval": 3,
-                "start_date_time": "6:00",
+                "start_day_time": "6:00",
                 "projects": [
                     {
                         "name": "test1",

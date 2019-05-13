@@ -68,7 +68,7 @@ class Config:
         self.host = str(values['daemon']['host'])
         self.interval = int(values['gui']['interval'])
         self.run_daemon = bool(values['gui']['run_daemon'])
-        self.start_date_time = str(values['gui']['start_date_time'])
+        self.start_day_time = str(values['gui']['start_day_time'])
         self.none_project = str(uuid.uuid4())
         self.projects = [Project.reinstate(project)
                          for project

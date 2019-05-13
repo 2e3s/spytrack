@@ -39,7 +39,7 @@ class FileConfigStorage:
             "gui": {
                 "run_daemon": config.run_daemon,
                 "interval": config.interval,
-                "start_date_time": config.start_date_time,
+                "start_day_time": config.start_day_time,
                 "projects": [project.to_json()
                              for project
                              in config.projects

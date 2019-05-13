@@ -22,4 +22,4 @@ gui:
       title: .*Visual Studio Code
       type: app
   run_daemon: true
-  start_date_time: '5:00'
+  start_day_time: '5:00'
