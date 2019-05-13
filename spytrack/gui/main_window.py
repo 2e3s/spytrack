@@ -5,7 +5,7 @@ from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QListWidgetItem, QVBoxLayout
 
-from analyze import EventsAnalyzer
+from analyze import AnalyzerFacade
 from analyze.matched_event import MatchedEvent
 from analyze.stats import get_pie_chart, PieChartData
 from gui.chart import Chart
@@ -120,7 +120,7 @@ class MainWindow(QtWidgets.QMainWindow):  # type: ignore
         self.timer.start(self.config.interval * 1000)
 
     def _run_chart(self) -> None:
-        analyzer = EventsAnalyzer(self.config)
+        analyzer = AnalyzerFacade(self.config)
         if self.ui.disableDateRange.isChecked():
             end_date = datetime.now()
             start_date = self._get_last_day_beginning(end_date)

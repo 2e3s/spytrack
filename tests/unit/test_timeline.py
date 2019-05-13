@@ -8,8 +8,10 @@ from analyze.events_analyzer import EventsAnalyzer
 
 
 class TestTimeline(unittest.TestCase):
-    TimelineResults = List[Tuple[str, int, bool]]  # App title, app timestamp (second), is event end
-    TimelineData = List[Tuple[int, int]]  # app/afk: timestamp second, duration in seconds
+    # App title, app timestamp (second), is event end
+    TimelineResults = List[Tuple[str, int, bool]]
+    # app/afk: timestamp second, duration in seconds
+    TimelineData = List[Tuple[int, int]]
 
     # 012345678901234567890
     #     |--------|    app
@@ -107,22 +109,32 @@ class TestTimeline(unittest.TestCase):
             data[1],
             {'app': 'Browser', 'title': 'website - Browser'}
         ) for data in app_data]
-        afk_events = [Event(2, get_date(10, 0, data[0]), data[1], {'status': 'not-afk'}) for data in afk_data]
-        app_timeline = Timeline.create_from_bucket_events('currentwindow', app_events)
-        afk_timeline = Timeline.create_from_bucket_events('afkstatus', afk_events)
-        app_timeline.intersect(afk_timeline, EventsAnalyzer.app_afk_timeline_condition)
+        afk_events = [Event(2,
+                            get_date(10, 0, data[0]),
+                            data[1],
+                            {'status': 'not-afk'}
+                            ) for data in afk_data]
+        create_function = Timeline.create_from_bucket_events
+        app_timeline = create_function('currentwindow', app_events)
+        afk_timeline = create_function('afkstatus', afk_events)
+        app_timeline.intersect(afk_timeline,
+                               EventsAnalyzer.app_afk_timeline_condition)
         self.assert_timeline(app_timeline, inclusive_results)
 
-        app_timeline = Timeline.create_from_bucket_events('currentwindow', app_events)
-        afk_timeline = Timeline.create_from_bucket_events('afkstatus', afk_events)
-        app_timeline.intersect(afk_timeline, EventsAnalyzer.app_afk_timeline_condition, False)
+        app_timeline = create_function('currentwindow', app_events)
+        afk_timeline = create_function('afkstatus', afk_events)
+        app_timeline.intersect(afk_timeline,
+                               EventsAnalyzer.app_afk_timeline_condition,
+                               False)
         self.assert_timeline(app_timeline, exclusive_results)
 
     def test_intersect(self) -> None:
-        app_timeline = Timeline.create_from_bucket_events('currentwindow', get_events('window'))
-        afk_timeline = Timeline.create_from_bucket_events('afkstatus', get_events('afk'))
+        create_function = Timeline.create_from_bucket_events
+        app_timeline = create_function('currentwindow', get_events('window'))
+        afk_timeline = create_function('afkstatus', get_events('afk'))
 
-        app_timeline.intersect(afk_timeline, EventsAnalyzer.app_afk_timeline_condition)
+        app_timeline.intersect(afk_timeline,
+                               EventsAnalyzer.app_afk_timeline_condition)
         self.assert_timeline(app_timeline, [
             ('Browser', 6, False),
             ('Browser', 11, True),
@@ -130,23 +142,33 @@ class TestTimeline(unittest.TestCase):
             ('Browser', 13, True),
         ])
 
-    def assert_timeline(self, timeline: Timeline, check_points: TimelineResults) -> None:
+    def assert_timeline(self,
+                        timeline: Timeline,
+                        check_points: TimelineResults
+                        ) -> None:
         self.assertEqual(len(check_points), len(timeline.points))
         for i in range(0, len(check_points)):
             check = check_points[i]
             point = timeline.points[i]
-            self.assertEqual(check[0], point.event_data['app'])
-            self.assertEqual(check[1], point.timestamp.second, point.event_data['app'])
-            self.assertEqual(check[2], point.is_end(), point.event_data['app'])
+            self.assertEqual(check[0],
+                             point.event_data['app'])
+            self.assertEqual(check[1],
+                             point.timestamp.second,
+                             point.event_data['app'])
+            self.assertEqual(check[2],
+                             point.is_end(),
+                             point.event_data['app'])
 
     def test_get_events(self) -> None:
         original_events = get_events('window')
-        app_timeline = Timeline.create_from_bucket_events('currentwindow', original_events)
+        app_timeline = Timeline.create_from_bucket_events('currentwindow',
+                                                          original_events)
         self.assertEqual(8, len(app_timeline.points))
         generated_events = app_timeline.get_events()
         self.assertEqual(4, len(generated_events))
         for i in range(len(original_events)):
             original_event = original_events[i]
             generated_event = generated_events[i]
-            self.assertEqual(original_event.timestamp, generated_event.timestamp)
+            self.assertEqual(original_event.timestamp,
+                             generated_event.timestamp)
             self.assertEqual(original_event.data, generated_event.data)
