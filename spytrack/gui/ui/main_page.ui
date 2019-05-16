@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>MainPage</class>
+ <widget class="QWidget" name="MainPage">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -15,9 +15,9 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <layout class="QHBoxLayout" name="datePickLayout_2">
+    <layout class="QHBoxLayout" name="datePickLayout">
      <item>
-      <widget class="QDateTimeEdit" name="startDateTimeEdit_2">
+      <widget class="QDateTimeEdit" name="startDateTimeEdit">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -64,7 +64,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QDateTimeEdit" name="endDateTimeEdit_2">
+      <widget class="QDateTimeEdit" name="endDateTimeEdit">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -98,7 +98,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QCheckBox" name="disableDateRange_2">
+      <widget class="QCheckBox" name="disableDateRange">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
          <horstretch>0</horstretch>
