@@ -1,6 +1,7 @@
 1. (1) - high priority
 2. (2) - unknown priority
 3. (3) - low priority
+4. (4) - Under question
 
 # Planned features
 
@@ -11,9 +12,9 @@
 
 ## Optimization
 
-- (2) Don't fetch all events, only after the last fetched one
+- (1) Don't fetch all events, only after the last fetched one
 - (2) Don't intersect all events, only after the last intersected one
-- (2) Don't aggregate on all events, add to the intersection only the last events
+- (3) Don't aggregate on all events, add to the intersection only the last events
 
 ## Configuration
 
@@ -25,12 +26,13 @@
 ## UI
 
 - (2) Icon should change depending on the current project
-- (1) Projects should be added, removed and edited in a separated UI rather than a config
+- (4) Projects should be added, removed and edited in a separated UI rather than a config
 - (3) Change tray icon depending on a project and its completion
 - (2) "Add a rule" dialog to on double-click on project's event
 - (3) Inclusive and exclusive filtering for events on the selected project (for analyzing mismatches).
       Maybe a normal string with ES-like syntax: `+search1 +"search2 complex" -"search exclude"` for simplicity
 - (2) Make projects settings collapsable
+- (2) Edit start of the day
 
 ## Projects
 
@@ -45,8 +47,6 @@
 
 ## Refactoring
 
-- (1) Name properties pythonic-way
-- (2) Hide analyzer under facade
 - (2) Hide AW client under a reading repository
 - (1) Add a linter
 - (2) Run windows_watcher_run in a thread
