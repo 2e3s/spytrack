@@ -4,7 +4,7 @@ from datetime import datetime
 from . dataset import get_events
 from unittest.mock import Mock, MagicMock
 from aw_client import ActivityWatchClient
-from analyze.events_analyzer import AnalyzerFacade
+from analyze.analyzer_facade import AnalyzerFacade
 from config import Config, Project, Rule
 
 

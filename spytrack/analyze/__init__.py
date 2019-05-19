@@ -1,1 +1,1 @@
-from .events_analyzer import AnalyzerFacade  # noqa
+from .analyzer_facade import AnalyzerFacade  # noqa

@@ -4,7 +4,7 @@ from typing import Tuple, List
 from aw_core import Event
 from . dataset import get_events, get_date
 from analyze.timeline import Timeline
-from analyze.events_analyzer import AnalyzerFacade
+from analyze.analyzer_facade import AnalyzerFacade
 
 
 class TestTimeline(unittest.TestCase):
