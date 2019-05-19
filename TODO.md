@@ -50,3 +50,4 @@
 - (2) Hide AW client under a reading repository
 - (1) Add a linter
 - (2) Run windows_watcher_run in a thread
+- (3) Move out settings widget

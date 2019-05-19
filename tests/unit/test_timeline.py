@@ -4,7 +4,7 @@ from typing import Tuple, List
 from aw_core import Event
 from . dataset import get_events, get_date
 from analyze.timeline import Timeline
-from analyze.events_analyzer import EventsAnalyzer
+from analyze.events_analyzer import AnalyzerFacade
 
 
 class TestTimeline(unittest.TestCase):
@@ -118,13 +118,13 @@ class TestTimeline(unittest.TestCase):
         app_timeline = create_function('currentwindow', app_events)
         afk_timeline = create_function('afkstatus', afk_events)
         app_timeline.intersect(afk_timeline,
-                               EventsAnalyzer.app_afk_timeline_condition)
+                               AnalyzerFacade.app_afk_timeline_condition)
         self.assert_timeline(app_timeline, inclusive_results)
 
         app_timeline = create_function('currentwindow', app_events)
         afk_timeline = create_function('afkstatus', afk_events)
         app_timeline.intersect(afk_timeline,
-                               EventsAnalyzer.app_afk_timeline_condition,
+                               AnalyzerFacade.app_afk_timeline_condition,
                                False)
         self.assert_timeline(app_timeline, exclusive_results)
 
@@ -134,7 +134,7 @@ class TestTimeline(unittest.TestCase):
         afk_timeline = create_function('afkstatus', get_events('afk'))
 
         app_timeline.intersect(afk_timeline,
-                               EventsAnalyzer.app_afk_timeline_condition)
+                               AnalyzerFacade.app_afk_timeline_condition)
         self.assert_timeline(app_timeline, [
             ('Browser', 6, False),
             ('Browser', 11, True),

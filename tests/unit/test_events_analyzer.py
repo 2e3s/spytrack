@@ -4,7 +4,7 @@ from datetime import datetime
 from . dataset import get_events
 from unittest.mock import Mock, MagicMock
 from aw_client import ActivityWatchClient
-from analyze.events_analyzer import EventsAnalyzer
+from analyze.events_analyzer import AnalyzerFacade
 from config import Config, Project, Rule
 
 
@@ -26,7 +26,7 @@ class TestAnalyzer(unittest.TestCase):
 
         config: Config = Mock()
 
-        analyzer = EventsAnalyzer(config, client_mock)
+        analyzer = AnalyzerFacade(config, client_mock)
         now_time = datetime.now()
         events = analyzer.get_events(now_time.replace(day=now_time.day-1),
                                      now_time.replace(day=now_time.day+1))

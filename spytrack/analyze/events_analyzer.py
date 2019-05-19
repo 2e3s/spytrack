@@ -15,16 +15,10 @@ BucketPoints = List[BucketPoint]
 BucketPointCondition = Callable[[BucketPoint], bool]
 
 
-class EventsAnalyzer:
-    def __init__(self,
-                 config: Config,
-                 client: ActivityWatchClient = None
-                 ) -> None:
+class AnalyzerFacade:
+    def __init__(self, config: Config, client: ActivityWatchClient) -> None:
         self.config = config
-        if client is None:
-            self.client = ActivityWatchClient("gui", testing=False)
-        else:
-            self.client = client
+        self.client = client
 
     def get_events(self, start_date: datetime, end_date: datetime) -> Events:
         buckets = {key: value
@@ -69,7 +63,7 @@ class EventsAnalyzer:
             return []
         app_bucket = app_buckets[0]
         afk_bucket = afk_buckets[0]
-        browser_matches = EventsAnalyzer._match_browser_buckets(
+        browser_matches = AnalyzerFacade._match_browser_buckets(
             app_bucket,
             browser_buckets,
             timelines
@@ -81,7 +75,7 @@ class EventsAnalyzer:
         # leave only windows non-afk events
         timelines[app_bucket].intersect(
             timelines[afk_bucket],
-            EventsAnalyzer.app_afk_timeline_condition
+            AnalyzerFacade.app_afk_timeline_condition
         )
         all_events: Events = []
         # leave only web-events belonging to the corresponding app

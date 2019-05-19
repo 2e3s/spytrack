@@ -3,6 +3,7 @@ from typing import List, Dict
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QListWidgetItem
+from aw_client import ActivityWatchClient
 from analyze.matched_event import MatchedEvent
 from analyze import AnalyzerFacade
 from analyze.stats import get_pie_chart, PieChartData
@@ -21,6 +22,7 @@ class MainPageWidget(QtWidgets.QWidget):  # type: ignore
         self.config = config
         self.ui = Ui_MainPage()
         self.ui.setupUi(self)  # type: ignore
+        self.aw_client = ActivityWatchClient("gui", testing=False)
 
         self.chart = Chart(self.config, self.ui.chartView)
         self.ui.projectsTimesList.itemSelectionChanged.connect(
@@ -67,7 +69,7 @@ class MainPageWidget(QtWidgets.QWidget):  # type: ignore
         self.timer.start(self.config.interval * 1000)
 
     def _run_chart(self) -> None:
-        analyzer = AnalyzerFacade(self.config)
+        analyzer = AnalyzerFacade(self.config, self.aw_client)
         if self.ui.disableDateRange.isChecked():
             end_date = datetime.now()
             start_date = self._get_last_day_beginning(end_date)
