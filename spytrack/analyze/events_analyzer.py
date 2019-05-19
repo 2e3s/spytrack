@@ -21,14 +21,16 @@ class AnalyzerFacade:
         self.client = client
 
     def get_events(self, start_date: datetime, end_date: datetime) -> Events:
-        buckets = {key: value
-                   for key, value
-                   in self.client.get_buckets().items()
-                   if value['type'] in [
-                       'currentwindow',
-                       'afkstatus',
-                       'web.tab.current',
-                   ]}
+        buckets: Dict[str, Dict[str, Any]] = {
+            key: value
+            for key, value
+            in self.client.get_buckets().items()
+            if value['type'] in [
+                'currentwindow',
+                'afkstatus',
+                'web.tab.current',
+            ]
+        }
 
         timelines = {}
         for bucket in buckets:
@@ -59,11 +61,12 @@ class AnalyzerFacade:
                        for key, value
                        in buckets.items()
                        if value['type'] == 'afkstatus']
+
         if len(app_buckets) == 0 or len(afk_buckets) == 0:
             return []
         app_bucket = app_buckets[0]
         afk_bucket = afk_buckets[0]
-        browser_matches = AnalyzerFacade._match_browser_buckets(
+        browser_matches = self._match_browser_buckets(
             app_bucket,
             browser_buckets,
             timelines
@@ -75,7 +78,7 @@ class AnalyzerFacade:
         # leave only windows non-afk events
         timelines[app_bucket].intersect(
             timelines[afk_bucket],
-            AnalyzerFacade.app_afk_timeline_condition
+            self.app_afk_timeline_condition
         )
         all_events: Events = []
         # leave only web-events belonging to the corresponding app
