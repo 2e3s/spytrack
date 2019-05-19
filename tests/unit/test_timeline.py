@@ -2,6 +2,7 @@ import unittest
 from parameterized import parameterized
 from typing import Tuple, List
 from aw_core import Event
+from analyze.bucket_type import BucketType
 from . dataset import get_events, get_date
 from analyze.timeline import Timeline
 from analyze.analyzer_facade import AnalyzerFacade
@@ -115,14 +116,14 @@ class TestTimeline(unittest.TestCase):
                             {'status': 'not-afk'}
                             ) for data in afk_data]
         create_function = Timeline.create_from_bucket_events
-        app_timeline = create_function('currentwindow', app_events)
-        afk_timeline = create_function('afkstatus', afk_events)
+        app_timeline = create_function(BucketType.APP, app_events)
+        afk_timeline = create_function(BucketType.AFK, afk_events)
         app_timeline.intersect(afk_timeline,
                                AnalyzerFacade.app_afk_timeline_condition)
         self.assert_timeline(app_timeline, inclusive_results)
 
-        app_timeline = create_function('currentwindow', app_events)
-        afk_timeline = create_function('afkstatus', afk_events)
+        app_timeline = create_function(BucketType.APP, app_events)
+        afk_timeline = create_function(BucketType.AFK, afk_events)
         app_timeline.intersect(afk_timeline,
                                AnalyzerFacade.app_afk_timeline_condition,
                                False)
@@ -130,8 +131,8 @@ class TestTimeline(unittest.TestCase):
 
     def test_intersect(self) -> None:
         create_function = Timeline.create_from_bucket_events
-        app_timeline = create_function('currentwindow', get_events('window'))
-        afk_timeline = create_function('afkstatus', get_events('afk'))
+        app_timeline = create_function(BucketType.APP, get_events('window'))
+        afk_timeline = create_function(BucketType.AFK, get_events('afk'))
 
         app_timeline.intersect(afk_timeline,
                                AnalyzerFacade.app_afk_timeline_condition)
@@ -161,7 +162,7 @@ class TestTimeline(unittest.TestCase):
 
     def test_get_events(self) -> None:
         original_events = get_events('window')
-        app_timeline = Timeline.create_from_bucket_events('currentwindow',
+        app_timeline = Timeline.create_from_bucket_events(BucketType.APP,
                                                           original_events)
         self.assertEqual(8, len(app_timeline.points))
         generated_events = app_timeline.get_events()

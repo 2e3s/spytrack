@@ -1,8 +1,9 @@
 import re
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import Dict, List, Any, Callable
 from aw_client import ActivityWatchClient
-
+from analyze.aw_events import AWEvents
+from analyze.bucket_type import BucketType
 from .event import Event
 from .matched_event import MatchedEvent
 from .bucket_point import BucketPoint
@@ -21,46 +22,30 @@ class AnalyzerFacade:
         self.client = client
 
     def get_events(self, start_date: datetime, end_date: datetime) -> Events:
-        buckets: Dict[str, Dict[str, Any]] = {
-            key: value
-            for key, value
-            in self.client.get_buckets().items()
-            if value['type'] in [
-                'currentwindow',
-                'afkstatus',
-                'web.tab.current',
-            ]
-        }
+        aw_events = AWEvents(self.client)
+
+        buckets = aw_events.fetch_buckets()
 
         timelines = {}
-        for bucket in buckets:
-            events = self.client.get_events(
-                bucket,
-                -1,
-                start_date.astimezone(timezone.utc),
-                end_date.astimezone(timezone.utc)
-            )
-            events = [event
-                      for event
-                      in events
-                      if event.duration.total_seconds() > 0]
-            timelines[bucket] = Timeline.create_from_bucket_events(
-                buckets[bucket]['type'],
+        for bucket_name, bucket_type in buckets.items():
+            events = aw_events.get_events(bucket_name, start_date, end_date)
+            timelines[bucket_name] = Timeline.create_from_bucket_events(
+                bucket_type,
                 events
             )
 
-        browser_buckets = [key
-                           for key, value
+        browser_buckets = [bucket
+                           for bucket, value
                            in buckets.items()
-                           if value['type'] == 'web.tab.current']
-        app_buckets = [key
-                       for key, value
+                           if value == BucketType.WEB]
+        app_buckets = [bucket
+                       for bucket, value
                        in buckets.items()
-                       if value['type'] == 'currentwindow']
-        afk_buckets = [key
-                       for key, value
+                       if value == BucketType.APP]
+        afk_buckets = [bucket
+                       for bucket, value
                        in buckets.items()
-                       if value['type'] == 'afkstatus']
+                       if value == BucketType.AFK]
 
         if len(app_buckets) == 0 or len(afk_buckets) == 0:
             return []
@@ -71,9 +56,9 @@ class AnalyzerFacade:
             browser_buckets,
             timelines
         )
-        for bucket in browser_buckets:
-            if bucket not in browser_matches:
-                del timelines[bucket]
+        for bucket_name in browser_buckets:
+            if bucket_name not in browser_matches:
+                del timelines[bucket_name]
 
         # leave only windows non-afk events
         timelines[app_bucket].intersect(

@@ -13,11 +13,10 @@ class Timeline:
     CutCondition = Callable[[BucketPoint], bool]
 
     @staticmethod
-    def create_from_bucket_events(bucket_type_str: str,
+    def create_from_bucket_events(bucket_type: BucketType,
                                   events: Events
                                   ) -> 'Timeline':
         all_points = []
-        bucket_type = BucketType.create(bucket_type_str)
         for event in events:
             all_points.append(BucketPoint(bucket_type,
                                           event.timestamp,
