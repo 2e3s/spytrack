@@ -2,7 +2,7 @@ import re
 from datetime import datetime
 from typing import Dict, List, Any, Callable
 from aw_client import ActivityWatchClient
-from analyze.aw_events import AWEvents
+from analyze.event_repository import EventRepository
 from analyze.bucket_type import BucketType
 from .event import Event
 from .matched_event import MatchedEvent
@@ -22,13 +22,15 @@ class AnalyzerFacade:
         self.client = client
 
     def get_events(self, start_date: datetime, end_date: datetime) -> Events:
-        aw_events = AWEvents(self.client)
+        event_repository = EventRepository(self.client)
 
-        buckets = aw_events.fetch_buckets()
+        buckets = event_repository.fetch_buckets()
 
         timelines = {}
         for bucket_name, bucket_type in buckets.items():
-            events = aw_events.get_events(bucket_name, start_date, end_date)
+            events = event_repository.get_events(bucket_name,
+                                                 start_date,
+                                                 end_date)
             timelines[bucket_name] = Timeline.create_from_bucket_events(
                 bucket_type,
                 events

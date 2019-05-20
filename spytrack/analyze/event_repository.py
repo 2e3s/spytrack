@@ -5,7 +5,7 @@ from .event import Event
 from aw_client import ActivityWatchClient
 
 
-class AWEvents:
+class EventRepository:
     BUCKET_TYPE_WINDOW = 'currentwindow'
     BUCKET_TYPE_AFK = 'afkstatus'
     BUCKET_TYPE_WEB = 'web.tab.current'
@@ -19,30 +19,24 @@ class AWEvents:
             for key, value
             in self.client.get_buckets().items()
             if value['type'] in [
-                AWEvents.BUCKET_TYPE_WINDOW,
-                AWEvents.BUCKET_TYPE_AFK,
-                AWEvents.BUCKET_TYPE_WEB,
+                EventRepository.BUCKET_TYPE_WINDOW,
+                EventRepository.BUCKET_TYPE_AFK,
+                EventRepository.BUCKET_TYPE_WEB,
             ]
         }
 
     def _get_bucket_type(self, data: Any) -> BucketType:
-        if data['type'] == AWEvents.BUCKET_TYPE_AFK:
+        if data['type'] == EventRepository.BUCKET_TYPE_AFK:
             return BucketType.AFK
-        elif data['type'] == AWEvents.BUCKET_TYPE_WINDOW:
+        elif data['type'] == EventRepository.BUCKET_TYPE_WINDOW:
             return BucketType.APP
-        elif data['type'] == AWEvents.BUCKET_TYPE_WEB:
+        elif data['type'] == EventRepository.BUCKET_TYPE_WEB:
             return BucketType.WEB
         else:
             raise RuntimeError
 
     def get_buckets(self) -> List[str]:
         return list(self.fetch_buckets().keys())
-
-    def get_buckets_by_type(self, bucket_type: BucketType) -> List[str]:
-        return [key
-                for key, value
-                in self.fetch_buckets().items()
-                if value == bucket_type]
 
     def get_cached_events(self,
                           bucket: str,
