@@ -46,7 +46,10 @@ class TestFileConfigStorage(unittest.TestCase):
             self.assertEqual(3, load_config.interval)
             self.assertTrue(load_config.run_daemon)
             self.assertEqual(2, len(load_config.projects))
-            self.assertEqual(load_config.none_project, load_config.projects[1].name)
+            self.assertEqual(
+                load_config.none_project,
+                load_config.projects[1].name
+            )
             self.assertIsInstance(load_config.projects[0], Project)
             self.assertIsInstance(load_config.projects[0].rules[0], Rule)
 

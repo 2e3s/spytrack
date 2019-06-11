@@ -106,12 +106,12 @@ class TestTimeline(unittest.TestCase):
     ) -> None:
         app_events = [Event(
             2,
-            get_date(10, 0, data[0]),
+            get_date(data[0]),
             data[1],
             {'app': 'Browser', 'title': 'website - Browser'}
         ) for data in app_data]
         afk_events = [Event(2,
-                            get_date(10, 0, data[0]),
+                            get_date(data[0]),
                             data[1],
                             {'status': 'not-afk'}
                             ) for data in afk_data]

@@ -9,3 +9,4 @@ test:
 	venv/bin/mypy --config-file=mypy.ini --strict tests
 	python -m unittest discover
 	flake8 spytrack/ --exclude spytrack/gui/ui
+	flake8 tests/
