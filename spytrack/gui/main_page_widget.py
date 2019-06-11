@@ -4,6 +4,7 @@ from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QListWidgetItem
 from aw_client import ActivityWatchClient
+from analyze.event_repository import EventRepository
 from analyze.matched_event import MatchedEvent
 from analyze import AnalyzerFacade
 from analyze.stats import get_pie_chart, PieChartData
@@ -14,7 +15,7 @@ from .ui.main_page import Ui_MainPage
 WidgetItems = List[QListWidgetItem]
 
 
-class MainPageWidget(QtWidgets.QWidget):  # type: ignore
+class MainPageWidget(QtWidgets.QWidget):
     last_matched_events: List[MatchedEvent]
 
     def __init__(self, config: Config) -> None:
@@ -25,7 +26,7 @@ class MainPageWidget(QtWidgets.QWidget):  # type: ignore
         self.aw_client = ActivityWatchClient("gui", testing=False)
 
         self.chart = Chart(self.config, self.ui.chartView)
-        self.ui.projectsTimesList.itemSelectionChanged.connect(
+        self.ui.projectsTimesList.itemSelectionChanged.connect(  # type: ignore
             self._update_project_events
         )
         self.last_matched_events = []
@@ -35,6 +36,7 @@ class MainPageWidget(QtWidgets.QWidget):  # type: ignore
 
     def reload_config(self, config: Config) -> None:
         self.config = config
+        self.timer.stop()
         self.chart.reload_config(config)
         self.timer.start(self.config.interval * 1000)
 
@@ -69,13 +71,13 @@ class MainPageWidget(QtWidgets.QWidget):  # type: ignore
         self.timer.start(self.config.interval * 1000)
 
     def _run_chart(self) -> None:
-        analyzer = AnalyzerFacade(self.config, self.aw_client)
+        analyzer = AnalyzerFacade(EventRepository(self.aw_client))
         if self.ui.disableDateRange.isChecked():
             end_date = datetime.now()
             start_date = self._get_last_day_beginning(end_date)
         else:
-            start_date = self.ui.startDateTimeEdit.dateTime().toPyDateTime()
             end_date = self.ui.endDateTimeEdit.dateTime().toPyDateTime()
+            start_date = self.ui.startDateTimeEdit.dateTime().toPyDateTime()
 
         events = analyzer.get_events(start_date, end_date)
         self.last_matched_events = analyzer.match(events,

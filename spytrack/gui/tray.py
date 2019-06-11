@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QAction, qApp, QMenu, QSystemTrayIcon, QApplication
 from gui.main_window import MainWindow
 
 
-class Tray(QSystemTrayIcon):  # type: ignore
+class Tray(QSystemTrayIcon):
     def __init__(self,
                  parent: QtCore.QObject,
                  main_window: Optional[MainWindow] = None
@@ -31,7 +31,7 @@ class Tray(QSystemTrayIcon):  # type: ignore
         show_action = QAction("Show/Hide", self.main_window)
         show_action.triggered.connect(self._show_hide_main_window)
         tray_menu.addAction(show_action)
-        self.activated.connect(self._left_click)
+        self.activated.connect(self._left_click)  # type: ignore
 
     def _left_click(self, reason: int) -> None:
         if reason == QSystemTrayIcon.Trigger:

@@ -5,7 +5,7 @@ from config import Rule
 from .ui.rule import Ui_RuleFrame
 
 
-class RuleWidget(QtWidgets.QFrame):  # type: ignore
+class RuleWidget(QtWidgets.QFrame):
     RULE_APP = 0
     RULE_WEB = 1
 
@@ -48,8 +48,8 @@ class RuleWidget(QtWidgets.QFrame):  # type: ignore
 
     def remove_from(self, layout: QVBoxLayout) -> None:
         self.hide()
-        self.setParent(None)
         layout.removeWidget(self)
+        self.deleteLater()
 
     @property
     def rule(self) -> Rule:

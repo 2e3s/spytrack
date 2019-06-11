@@ -1,14 +1,13 @@
 import re
 from datetime import datetime
 from typing import Dict, List, Any, Callable
-from aw_client import ActivityWatchClient
 from analyze.event_repository import EventRepository
 from analyze.bucket_type import BucketType
 from .event import Event
 from .matched_event import MatchedEvent
 from .bucket_point import BucketPoint
 from .timeline import Timeline
-from config import Config, Project, Rule
+from config import Project, Rule
 
 ClientBuckets = Dict[str, Dict[str, Any]]
 Events = List[Event]
@@ -17,20 +16,17 @@ BucketPointCondition = Callable[[BucketPoint], bool]
 
 
 class AnalyzerFacade:
-    def __init__(self, config: Config, client: ActivityWatchClient) -> None:
-        self.config = config
-        self.client = client
+    def __init__(self, event_repository: EventRepository) -> None:
+        self.event_repository = event_repository
 
     def get_events(self, start_date: datetime, end_date: datetime) -> Events:
-        event_repository = EventRepository(self.client)
-
-        buckets = event_repository.fetch_buckets()
+        buckets = self.event_repository.fetch_buckets()
 
         timelines = {}
         for bucket_name, bucket_type in buckets.items():
-            events = event_repository.get_events(bucket_name,
-                                                 start_date,
-                                                 end_date)
+            events = self.event_repository.get_events(bucket_name,
+                                                      start_date,
+                                                      end_date)
             timelines[bucket_name] = Timeline.create_from_bucket_events(
                 bucket_type,
                 events

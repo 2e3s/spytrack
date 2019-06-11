@@ -11,7 +11,7 @@ from runner import Runner
 WidgetItems = List[QListWidgetItem]
 
 
-class MainWindow(QtWidgets.QMainWindow):  # type: ignore
+class MainWindow(QtWidgets.QMainWindow):
     ui: Ui_Main
     last_matched_events: List[MatchedEvent]
 
@@ -33,9 +33,9 @@ class MainWindow(QtWidgets.QMainWindow):  # type: ignore
         self._setup_main_widget()
 
     def _setup_main_widget(self) -> None:
-        main_page_widget = MainPageWidget(self.config)
+        self.main_page_widget = MainPageWidget(self.config)
         layout: QVBoxLayout = self.ui.tabChart.layout()
-        layout.addWidget(main_page_widget)
+        layout.addWidget(self.main_page_widget)
 
     def _setup_server_settings(self) -> None:
         self.ui.portBox.setValue(self.config.port)
@@ -64,7 +64,7 @@ class MainWindow(QtWidgets.QMainWindow):  # type: ignore
                                project: Project) -> ProjectWidget:
         project_widget = ProjectWidget(project)
         project_widget.register_callbacks(
-            lambda: layout.insertWidget(  # type: ignore
+            lambda: layout.insertWidget(
                 layout.indexOf(project_widget),
                 self._create_project_widget(layout,
                                             Project('',
@@ -85,7 +85,6 @@ class MainWindow(QtWidgets.QMainWindow):  # type: ignore
 
     def _modify_config(self) -> None:
         self.ui.applyButton.setDisabled(True)
-        self.timer.stop()
 
         self.config.port = int(self.ui.portBox.value())
         self.config.host = self.ui.hostEdit.text()
@@ -95,4 +94,5 @@ class MainWindow(QtWidgets.QMainWindow):  # type: ignore
 
         self.config_storage.save(self.config)
         self.stats_runner.reload(self.config)
+        self.main_page_widget.reload_config(self.config)
         self.ui.applyButton.setDisabled(False)

@@ -7,7 +7,7 @@ from gui.rule_widget import RuleWidget
 from .ui.project import Ui_ProjectFrame
 
 
-class ProjectWidget(QtWidgets.QFrame):  # type: ignore
+class ProjectWidget(QtWidgets.QFrame):
     def __init__(self, project: Project) -> None:
         super().__init__()
         self.ui = Ui_ProjectFrame()
@@ -27,7 +27,7 @@ class ProjectWidget(QtWidgets.QFrame):  # type: ignore
                             ) -> RuleWidget:
         rule_widget = RuleWidget(rule)
         rule_widget.register_callbacks(
-            lambda: layout.insertWidget(  # type: ignore
+            lambda: layout.insertWidget(
                 layout.indexOf(rule_widget),
                 self._create_rule_widget(layout, Rule({"type": "app"}))
             ),
@@ -45,8 +45,8 @@ class ProjectWidget(QtWidgets.QFrame):  # type: ignore
 
     def remove_from(self, layout: QVBoxLayout) -> None:
         self.hide()
-        self.setParent(None)
         layout.removeWidget(self)
+        self.deleteLater()
 
     @property
     def project(self) -> Project:
