@@ -40,16 +40,16 @@ class TestEventRepository(unittest.TestCase):
 
     def test_get_cached_events(self) -> None:
         mock_events1 = [
-            Event(1, get_date(1), 3, {'app': 'x', 'title': 'nothing1'}),
-            Event(2, get_date(5), 4, {'app': 'x', 'title': 'nothing2'}),
-            Event(3, get_date(10), 5, {'app': 'x', 'title': 'website'}),
             Event(4, get_date(16), 2, {'app': 'x', 'title': 'nothing3'}),
+            Event(3, get_date(10), 5, {'app': 'x', 'title': 'website'}),
+            Event(2, get_date(5), 4, {'app': 'x', 'title': 'nothing2'}),
+            Event(1, get_date(1), 3, {'app': 'x', 'title': 'nothing1'}),
         ]
         mock_events2 = [
-            Event(3, get_date(10), 5, {'app': 'x', 'title': 'website'}),
-            Event(4, get_date(16), 4, {'app': 'x', 'title': 'nothing3'}),
-            Event(5, get_date(21), 5, {'app': 'x', 'title': 'website'}),
             Event(6, get_date(27), 2, {'app': 'x', 'title': 'nothing3'}),
+            Event(5, get_date(21), 5, {'app': 'x', 'title': 'website'}),
+            Event(4, get_date(16), 4, {'app': 'x', 'title': 'nothing3'}),
+            Event(3, get_date(10), 5, {'app': 'x', 'title': 'website'}),
         ]
         self.client_mock.get_events = MagicMock(
             side_effect=[mock_events1, mock_events2]
@@ -58,20 +58,20 @@ class TestEventRepository(unittest.TestCase):
         time = datetime.now()
         events = self.repository.get_cached_events('window', time, time)
         self.check_events([
-            ('x', 'nothing1', 1, 3),
-            ('x', 'nothing2', 5, 4),
-            ('x', 'website', 10, 5),
             ('x', 'nothing3', 16, 2),
+            ('x', 'website', 10, 5),
+            ('x', 'nothing2', 5, 4),
+            ('x', 'nothing1', 1, 3),
         ], events)
 
         events = self.repository.get_cached_events('window', time, time)
         self.check_events([
-            ('x', 'nothing1', 1, 3),
-            ('x', 'nothing2', 5, 4),
-            ('x', 'website', 10, 5),
-            ('x', 'nothing3', 16, 4),
-            ('x', 'website', 21, 5),
             ('x', 'nothing3', 27, 2),
+            ('x', 'website', 21, 5),
+            ('x', 'nothing3', 16, 4),
+            ('x', 'website', 10, 5),
+            ('x', 'nothing2', 5, 4),
+            ('x', 'nothing1', 1, 3),
         ], events)
 
     def check_events(self, checked_events: List[Tuple[str, str, int, int]],

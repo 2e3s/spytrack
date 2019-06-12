@@ -16,6 +16,7 @@ class EventRepository:
     def __init__(self, client: ActivityWatchClient) -> None:
         self.client = client
         self.events_cache: Dict[str, Events] = {}
+        self.cached_start_time = datetime.now()
 
     def fetch_buckets(self) -> Dict[str, BucketType]:
         return {
@@ -44,23 +45,28 @@ class EventRepository:
 
     def get_cached_events(self, bucket: str, start_time: datetime,
                           end_time: datetime) -> Events:
-        if not self._has_cache(bucket):
+        if bucket not in self.events_cache \
+                or len(self.events_cache[bucket]) == 0:
             events = self.get_events(bucket, start_time, end_time)
         else:
-            original_events = self._get_cache(bucket)
-            last_event = original_events[-1]
-            next_start_time = last_event.timestamp
+            original_events = self.events_cache[bucket]
+            last_event = original_events[0]
+            next_start_time = last_event.timestamp.astimezone(tz=None)
             next_events = self.get_events(bucket, next_start_time, end_time)
-            next_ids = [event.id for event in next_events]
+            next_ids = [event.id for event in reversed(next_events)]
             if last_event.id not in next_ids:
                 # no merging required
-                events = original_events + next_events
+                events = next_events + original_events
             else:
-                first_position = next_ids.index(last_event.id)
-                original_events[-1] = next_events[first_position]
-                events = original_events + next_events[first_position + 1:]
+                last_position = len(next_ids) - next_ids.index(
+                    last_event.id) - 1
+                original_events[0] = next_events[last_position]
+                if last_position == 0:
+                    events = next_events + original_events
+                else:
+                    events = next_events[:last_position] + original_events
 
-        self._set_cache(bucket, events)
+        self.events_cache[bucket] = events
 
         return events
 
@@ -75,12 +81,37 @@ class EventRepository:
                 in events
                 if event.duration.total_seconds() > 0]
 
-    def _has_cache(self, bucket: str) -> bool:
-        return bucket in self.events_cache \
-               and len(self.events_cache[bucket]) > 0
+    def get_bucket_events(self, buckets: List[str], start_date: datetime,
+                          end_date: datetime) -> Dict[str, Events]:
+        events = {}
+        for bucket_name in buckets:
+            events[bucket_name] = self.get_events(
+                bucket_name,
+                start_date,
+                end_date
+            )
 
-    def _set_cache(self, bucket: str, events: Events) -> None:
-        self.events_cache[bucket] = events
+        return events
 
-    def _get_cache(self, bucket: str) -> Events:
-        return self.events_cache[bucket]
+    def get_cached_bucket_events(self, buckets: List[str],
+                                 start_time: datetime, end_time: datetime
+                                 ) -> Dict[str, Events]:
+        if not self._cached_time_matches(start_time):
+            self.events_cache.clear()
+            self.cached_start_time = start_time
+
+        events = {}
+        for bucket_name in buckets:
+            events[bucket_name] = self.get_cached_events(
+                bucket_name,
+                start_time,
+                end_time
+            )
+
+        return events
+
+    def _cached_time_matches(self, compared_time: datetime) -> bool:
+        cached_time = self.cached_start_time.replace(microsecond=0, second=0)
+        compared_time = compared_time.replace(microsecond=0, second=0)
+
+        return cached_time == compared_time

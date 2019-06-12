@@ -23,7 +23,8 @@ class MainPageWidget(QtWidgets.QWidget):
         self.config = config
         self.ui = Ui_MainPage()
         self.ui.setupUi(self)  # type: ignore
-        self.aw_client = ActivityWatchClient("gui", testing=False)
+        aw_client = ActivityWatchClient("gui", testing=False)
+        self.events_repository = EventRepository(aw_client)
 
         self.chart = Chart(self.config, self.ui.chartView)
         self.ui.projectsTimesList.itemSelectionChanged.connect(  # type: ignore
@@ -71,7 +72,7 @@ class MainPageWidget(QtWidgets.QWidget):
         self.timer.start(self.config.interval * 1000)
 
     def _run_chart(self) -> None:
-        analyzer = AnalyzerFacade(EventRepository(self.aw_client))
+        analyzer = AnalyzerFacade()
         if self.ui.disableDateRange.isChecked():
             end_date = datetime.now()
             start_date = self._get_last_day_beginning(end_date)
@@ -79,8 +80,23 @@ class MainPageWidget(QtWidgets.QWidget):
             end_date = self.ui.endDateTimeEdit.dateTime().toPyDateTime()
             start_date = self.ui.startDateTimeEdit.dateTime().toPyDateTime()
 
-        events = analyzer.get_events(start_date, end_date)
-        self.last_matched_events = analyzer.match(events,
+        buckets = self.events_repository.fetch_buckets()
+
+        if self.ui.disableDateRange.isChecked():
+            events = self.events_repository.get_cached_bucket_events(
+                list(buckets.keys()),
+                start_date,
+                end_date
+            )
+        else:
+            events = self.events_repository.get_bucket_events(
+                list(buckets.keys()),
+                start_date,
+                end_date
+            )
+
+        analyzed_events = analyzer.analyze_events(buckets, events)
+        self.last_matched_events = analyzer.match(analyzed_events,
                                                   self.config.projects,
                                                   self.config.none_project)
         chart_data = get_pie_chart(self.last_matched_events)

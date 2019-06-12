@@ -1,7 +1,5 @@
 import re
-from datetime import datetime
 from typing import Dict, List, Any, Callable
-from analyze.event_repository import EventRepository
 from analyze.bucket_type import BucketType
 from .event import Event
 from .matched_event import MatchedEvent
@@ -11,22 +9,18 @@ from config import Project, Rule
 
 ClientBuckets = Dict[str, Dict[str, Any]]
 Events = List[Event]
+BucketName = str
+Buckets = Dict[BucketName, BucketType]
 BucketPoints = List[BucketPoint]
 BucketPointCondition = Callable[[BucketPoint], bool]
 
 
 class AnalyzerFacade:
-    def __init__(self, event_repository: EventRepository) -> None:
-        self.event_repository = event_repository
-
-    def get_events(self, start_date: datetime, end_date: datetime) -> Events:
-        buckets = self.event_repository.fetch_buckets()
-
+    def analyze_events(self, buckets: Buckets,
+                       bucket_events: Dict[BucketName, Events]) -> Events:
         timelines = {}
         for bucket_name, bucket_type in buckets.items():
-            events = self.event_repository.get_events(bucket_name,
-                                                      start_date,
-                                                      end_date)
+            events = bucket_events[bucket_name]
             timelines[bucket_name] = Timeline.create_from_bucket_events(
                 bucket_type,
                 events
@@ -83,11 +77,8 @@ class AnalyzerFacade:
 
         return all_events
 
-    def match(self,
-              events: Events,
-              projects: List[Project],
-              none_project: str
-              ) -> List[MatchedEvent]:
+    def match(self, events: Events, projects: List[Project],
+              none_project: str) -> List[MatchedEvent]:
         matched_events = []
         for event in events:
             match_result = False
@@ -95,37 +86,29 @@ class AnalyzerFacade:
                 for rule in project.rules:
                     match_result = self._match_event(event, rule)
                     if match_result:
-                        matched_events.append(MatchedEvent(project.name,
-                                                           rule.id,
-                                                           event
-                                                           ))
+                        matched_event = MatchedEvent(project.name, rule.id,
+                                                     event)
+                        matched_events.append(matched_event)
                         break
                 if match_result:
                     break
             if not match_result:
-                matched_events.append(MatchedEvent(none_project,
-                                                   none_project,
-                                                   event
-                                                   ))
+                matched_event = MatchedEvent(none_project, none_project,
+                                             event)
+                matched_events.append(matched_event)
 
         return matched_events
 
     def _match_event(self, event: Event, definition: Rule) -> bool:
         if 'url' in definition and 'url' in event.data:
-            return re.search(definition['url'],
-                             event.data['url'],
-                             flags=re.IGNORECASE
-                             ) is not None
+            return re.search(definition['url'], event.data['url'],
+                             flags=re.IGNORECASE) is not None
         if 'title' in definition and 'title' in event.data:
-            return re.search(definition['title'],
-                             event.data['title'],
-                             flags=re.IGNORECASE
-                             ) is not None
+            return re.search(definition['title'], event.data['title'],
+                             flags=re.IGNORECASE) is not None
         if 'app' in definition and 'app' in event.data:
-            return re.search(definition['app'],
-                             event.data['app'],
-                             flags=re.IGNORECASE
-                             ) is not None
+            return re.search(definition['app'], event.data['app'],
+                             flags=re.IGNORECASE) is not None
         return False
 
     @staticmethod

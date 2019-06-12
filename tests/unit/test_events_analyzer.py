@@ -1,9 +1,7 @@
 import unittest
-from datetime import datetime
-from analyze.event_repository import EventRepository
+
+from analyze.bucket_type import BucketType
 from . dataset import get_events
-from unittest.mock import Mock, MagicMock
-from aw_client import ActivityWatchClient
 from analyze.analyzer_facade import AnalyzerFacade
 from config import Project, Rule
 
@@ -13,21 +11,19 @@ class TestAnalyzer(unittest.TestCase):
         super().setUp()
 
     def test_analyze_empty(self) -> None:
-        client_mock: ActivityWatchClient = Mock()
-        client_mock.get_buckets = MagicMock()
-        client_mock.get_buckets.return_value = {
-            'window': {'type': 'currentwindow'},
-            'afk': {'type': 'afkstatus'},
-            'browser': {'type': 'web.tab.current'},
-        }
-        client_mock.get_events = MagicMock(
-            side_effect=lambda bucket_id, *args: get_events(bucket_id)
+        analyzer = AnalyzerFacade()
+        events = analyzer.analyze_events(
+            {
+                'window': BucketType.APP,
+                'afk': BucketType.AFK,
+                'browser': BucketType.WEB,
+            },
+            {
+                'window': get_events('window'),
+                'afk': get_events('afk'),
+                'browser': get_events('browser'),
+            },
         )
-
-        analyzer = AnalyzerFacade(EventRepository(client_mock))
-        now_time = datetime.now()
-        events = analyzer.get_events(now_time.replace(day=now_time.day-1),
-                                     now_time.replace(day=now_time.day+1))
 
         # Application on non-afk
         # [(5, {'app': 'Another2', 'title': 'whatever'}, False),
