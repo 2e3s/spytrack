@@ -61,8 +61,8 @@ class EventRepository:
                 last_position = len(next_ids) - next_ids.index(
                     last_event.id) - 1
                 original_events[0] = next_events[last_position]
-                if last_position == 0:
-                    events = next_events + original_events
+                if last_position == len(next_ids) - 1:
+                    events = next_events + original_events[1:]
                 else:
                     events = next_events[:last_position] + original_events
 

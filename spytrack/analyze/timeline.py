@@ -36,11 +36,9 @@ class Timeline:
         self.points = points
         self.points.sort()
 
-    def intersect(self,
-                  spec_timeline: 'Timeline',
+    def intersect(self, spec_timeline: 'Timeline',  # noqa
                   intersect_condition: CutCondition,
-                  inclusive: bool = True
-                  ) -> None:
+                  inclusive: bool = True) -> None:
         """
         Finds an intersection of 2 timelines.
 

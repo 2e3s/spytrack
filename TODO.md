@@ -12,9 +12,8 @@
 
 ## Optimization
 
-- (1) Don't fetch all events, only after the last fetched one
-- (2) Don't intersect all events, only after the last intersected one
-- (3) Don't aggregate on all events, add to the intersection only the last events
+- (1) Don't intersect all events, only after the last intersected one
+- (2) Don't aggregate on all events, add to the intersection only the last events
 
 ## Configuration
 
