@@ -8,20 +8,7 @@ def get_date(seconds: int) -> datetime.datetime:
                              tzinfo=datetime.timezone.utc)
 
 
-#  | start: 10:00:00
-#  12345678901234567890
-#  |-- |++++++++        1
-#  |-|--|+++++|------   2
-#  |---|----|+++++|--   3
-#      ||+++++|-        4
-#      ||---|+|+        5
-#  12345678901234567890
-# 1. afk: 7-15
-# 2. window: Another 1-2, Another2 3-5, Browser 6-11, Browser 12-18
-# 3. browser: nothing1 1-4, nothing2 5-9, website 10-15, nothing 16-18
-# 4. window/afk: Another2 5-5, Browser 6-11, Browser 12-13
-# 5. browser/window/afk: Another2 5-5, nothing2 6-9, website 10-11,
-#    website 12-13
+# See "MergeEvents.drawio" for better understanding
 def get_events(bucket_id: str) -> List[Event]:
     if bucket_id == 'window':
         return [
