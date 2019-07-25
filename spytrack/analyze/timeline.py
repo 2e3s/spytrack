@@ -50,7 +50,7 @@ class Timeline:
         :param inclusive: If False then those points are returned
             which don't belong to the intersection
         """
-        points = self.points.copy()
+        points = self.points
         for point in spec_timeline.points:
             points.append(point)
         points.sort()
