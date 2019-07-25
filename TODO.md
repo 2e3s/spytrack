@@ -24,6 +24,7 @@
 
 ## UI
 
+- (1) Aggregate events by data
 - (2) Icon should change depending on the current project
 - (4) Projects should be added, removed and edited in a separated UI rather than a config
 - (3) Change tray icon depending on a project and its completion

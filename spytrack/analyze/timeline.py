@@ -41,14 +41,14 @@ class Timeline:
                   inclusive: bool = True) -> None:
         """
         Finds an intersection of 2 timelines.
+        Replaces all points of the current timeline by those which intersect
+        (or not if exclusively) the given timeline
 
         :param spec_timeline: Timeline to compare against
         :param intersect_condition: Conditional function which defines
             which points in spec_timeline are considered
         :param inclusive: If False then those points are returned
             which don't belong to the intersection
-        :return: All points of the current timeline which intersect
-            (or not if exclusively) the given timeline
         """
         points = self.points.copy()
         for point in spec_timeline.points:
@@ -106,9 +106,9 @@ class Timeline:
 
         self.points = cut_points
 
-    def get_browser_app(self, app_bucket_events: 'Timeline') -> Optional[str]:
+    def get_browser_app(self, app_timeline: 'Timeline') -> Optional[str]:
         for point in self.points:
-            app_point = app_bucket_events._get_event_at(point.timestamp)
+            app_point = app_timeline._get_event_at(point.timestamp)
             if app_point is None:
                 continue
             app_point_title = app_point.event_data['title']

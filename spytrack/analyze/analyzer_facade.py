@@ -16,6 +16,8 @@ BucketPointCondition = Callable[[BucketPoint], bool]
 
 
 class AnalyzerFacade:
+    browser_buckets_cache: Dict[BucketName, str] = {}
+
     def analyze_events(self, buckets: Buckets,
                        bucket_events: Dict[BucketName, Events]) -> Events:
         timelines = {}
@@ -122,12 +124,17 @@ class AnalyzerFacade:
     @staticmethod
     def _match_browser_buckets(
             app_bucket: str,
-            browser_buckets: List[str],
-            timelines: Dict[str, Timeline]
-    ) -> Dict[str, str]:
+            browser_buckets: List[BucketName],
+            timelines: Dict[BucketName, Timeline]
+    ) -> Dict[BucketName, str]:
         app_timeline = timelines[app_bucket]
         matches = {}
+        cache = AnalyzerFacade.browser_buckets_cache
         for browser_bucket in browser_buckets:
+            if browser_bucket in cache:
+                matches[browser_bucket] = cache[browser_bucket]
+                continue
+
             browser_timeline = timelines[browser_bucket]
             match_app = browser_timeline.get_browser_app(app_timeline)
 
