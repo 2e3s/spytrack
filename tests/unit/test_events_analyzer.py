@@ -10,7 +10,7 @@ class TestAnalyzer(unittest.TestCase):
     def setUp(self) -> None:
         super().setUp()
 
-    def test_analyze_empty(self) -> None:
+    def test_analyze_events(self) -> None:
         analyzer = AnalyzerFacade()
         events = analyzer.analyze_events(
             {

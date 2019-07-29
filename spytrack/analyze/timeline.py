@@ -36,9 +36,9 @@ class Timeline:
         self.points = points
         self.points.sort()
 
-    def intersect(self, spec_timeline: 'Timeline',  # noqa
+    def intersect(self, spec_timeline: 'Timeline',
                   intersect_condition: CutCondition,
-                  inclusive: bool = True) -> None:
+                  is_inclusive: bool = True) -> None:
         """
         Finds an intersection of 2 timelines.
         Replaces all points of the current timeline by those which intersect
@@ -46,8 +46,8 @@ class Timeline:
 
         :param spec_timeline: Timeline to compare against
         :param intersect_condition: Conditional function which defines
-            which points in spec_timeline are considered
-        :param inclusive: If False then those points are returned
+            which points in spec_timeline are inside intersection
+        :param is_inclusive: If False then those points are returned
             which don't belong to the intersection
         """
         points = self.points
@@ -56,32 +56,32 @@ class Timeline:
         points.sort()
 
         cut_points = []
-        include = not inclusive
+        is_exclusive = not is_inclusive
+        # inclusive: inside intersection condition
+        # exclusive: outside intersection condition
+        in_intersection = is_exclusive
         opened_point = None
         for point in points:
-            if point.event_type == spec_timeline._bucket_type:
+            if spec_timeline._is_source_of_point(point):
                 if not intersect_condition(point):
                     continue
-                if point.is_end():
-                    include = not inclusive
-                    if opened_point is not None:
-                        cut_points.append(BucketPoint(
-                            opened_point.event_type,
-                            point.timestamp,
-                            opened_point.event,
-                            inclusive
-                        ))
+
+                if not point.is_end():
+                    intersection_started = is_inclusive
                 else:
-                    include = inclusive
-                    if opened_point is not None:
-                        cut_points.append(BucketPoint(
-                            opened_point.event_type,
-                            point.timestamp,
-                            opened_point.event,
-                            not inclusive
-                        ))
+                    intersection_started = is_exclusive
+                intersection_ended = not intersection_started
+
+                if opened_point is not None:
+                    cut_points.append(BucketPoint(
+                        opened_point.event_type,
+                        point.timestamp,
+                        opened_point.event,
+                        intersection_ended
+                    ))
+                in_intersection = intersection_started
             else:
-                if include:
+                if in_intersection:
                     cut_points.append(point)
                 if not point.is_end():
                     opened_point = point
@@ -89,22 +89,29 @@ class Timeline:
                     opened_point = None
 
         if len(cut_points) > 0:
-            current_time = cut_points[-1].timestamp
-            close_points: Dict[int, BucketPoint] = {}
-            for i in reversed(range(len(cut_points))):
-                point = cut_points[i]
-                if point.timestamp != current_time:
-                    close_points.clear()
-                    current_time = point.timestamp
-                if point.is_end():
-                    close_points[i] = point
-                elif len(close_points) > 0:
-                    for index, opened_point in close_points.items():
-                        if point.event is opened_point.event:
-                            del cut_points[index]
-                            del cut_points[i]
+            self._filter_empty_points(cut_points)
 
         self.points = cut_points
+
+    def _is_source_of_point(self, point: BucketPoint) -> bool:
+        # consider using generated timeline id
+        return point.event_type == self._bucket_type
+
+    def _filter_empty_points(self, cut_points: BucketPoints) -> None:
+        current_time = cut_points[-1].timestamp
+        close_points: Dict[int, BucketPoint] = {}
+        for i in reversed(range(len(cut_points))):
+            point = cut_points[i]
+            if point.timestamp != current_time:
+                close_points.clear()
+                current_time = point.timestamp
+            if point.is_end():
+                close_points[i] = point
+            elif len(close_points) > 0:
+                for index, opened_point in close_points.items():
+                    if point.event is opened_point.event:
+                        del cut_points[index]
+                        del cut_points[i]
 
     def get_browser_app(self, app_timeline: 'Timeline') -> Optional[str]:
         for point in self.points:
