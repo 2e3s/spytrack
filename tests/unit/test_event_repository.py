@@ -22,8 +22,8 @@ class TestEventRepository(unittest.TestCase):
         self.repository = EventRepository(self.client_mock)
 
     def test_get_buckets(self) -> None:
-        self.assertEqual(['window', 'afk', 'browser'],
-                         self.repository.get_buckets())
+        buckets = list(self.repository.fetch_buckets().keys())
+        self.assertEqual(['window', 'afk', 'browser'], buckets)
 
     def test_get_events(self) -> None:
         self.client_mock.get_events = MagicMock(

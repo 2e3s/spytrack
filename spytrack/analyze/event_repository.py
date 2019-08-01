@@ -40,9 +40,6 @@ class EventRepository:
         else:
             raise RuntimeError
 
-    def get_buckets(self) -> List[str]:
-        return list(self.fetch_buckets().keys())
-
     def get_cached_events(self, bucket: str, start_time: datetime,
                           end_time: datetime) -> Events:
         if bucket not in self.events_cache \
