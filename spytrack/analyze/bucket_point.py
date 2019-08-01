@@ -1,6 +1,6 @@
 import datetime
 from typing import Dict
-from aw_core import Event
+from .event import Event
 from .bucket_type import BucketType
 
 
