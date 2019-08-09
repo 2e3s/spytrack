@@ -5,8 +5,8 @@ build-ui:
 	pyuic5 ./spytrack/gui/ui/main_page.ui > ./spytrack/gui/ui/main_page.py
 
 test:
-	venv/bin/mypy --config-file=mypy.ini --strict spytrack/__main__.py
-	venv/bin/mypy --config-file=mypy.ini --strict tests
-	python -m unittest discover
 	flake8 spytrack/ --exclude spytrack/gui/ui --max-complexity 10
 	flake8 tests/
+	python -m unittest discover
+	venv/bin/mypy --config-file=mypy.ini --strict spytrack/__main__.py
+	venv/bin/mypy --config-file=mypy.ini --strict tests

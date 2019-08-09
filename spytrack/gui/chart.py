@@ -31,7 +31,7 @@ class Chart:
         bar_set = QBarSet('Default')
         categories = []
         for project, duration in chart_data.data.items():
-            if project == self.config.none_project:
+            if project == self.config.projects.none_project:
                 project = 'None'
             categories.append(project)
             bar_set.append(duration)

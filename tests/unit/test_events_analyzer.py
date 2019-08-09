@@ -1,6 +1,7 @@
 import unittest
 
 from analyze.bucket_type import BucketType
+from config.config import Projects
 from . dataset import get_events
 from analyze.analyzer_facade import AnalyzerFacade
 from config import Project, Rule
@@ -63,10 +64,10 @@ class TestAnalyzer(unittest.TestCase):
             self.assertEqual(check[2],
                              event.duration.seconds, event.data['title'])
 
-        matched_events = analyzer.match(events, [
+        matched_events = analyzer.match(events, Projects([
             Project('test1',
                     [Rule({'id': '1', 'type': 'app', 'app': 'Browser'})])
-        ], 'none')
+        ], 'none'))
         check_matched_events = [
             ('nothing2', None),
             ('website - Browser', 'test1'),

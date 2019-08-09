@@ -1,11 +1,12 @@
 import re
 from typing import Dict, List, Any, Callable
 from analyze.bucket_type import BucketType
+from config.config import Projects
 from .event import Event
 from .matched_event import MatchedEvent
 from .bucket_point import BucketPoint
 from .timeline import Timeline
-from config import Project, Rule
+from config import Rule
 
 ClientBuckets = Dict[str, Dict[str, Any]]
 Events = List[Event]
@@ -79,8 +80,7 @@ class AnalyzerFacade:
 
         return all_events
 
-    def match(self, events: Events, projects: List[Project],
-              none_project: str) -> List[MatchedEvent]:
+    def match(self, events: Events, projects: Projects) -> List[MatchedEvent]:
         matched_events = []
         for event in events:
             match_result = False
@@ -95,7 +95,8 @@ class AnalyzerFacade:
                 if match_result:
                     break
             if not match_result:
-                matched_event = MatchedEvent(none_project, none_project,
+                matched_event = MatchedEvent(projects.none_project,
+                                             projects.none_project,
                                              event)
                 matched_events.append(matched_event)
 

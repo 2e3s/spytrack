@@ -58,10 +58,35 @@ class Project:
         }
 
 
+class Projects:
+    @staticmethod
+    def reinstate(config_projects: List[Any], none_project: str) -> 'Projects':
+        projects: List['Project'] = []
+        for config_project in config_projects:
+            rules = [Rule(rule) for rule in config_project['rules']]
+            project = Project(config_project['name'], rules)
+            projects.append(project)
+
+        return Projects(projects, none_project)
+
+    def __init__(self, projects: List[Project], none_project: str) -> None:
+        self.none_project = none_project
+        self.projects = projects
+        self.projects.append(Project.create_empty(self.none_project))
+
+    def __iter__(self) -> Iterator[Project]:
+        return iter(self.projects)
+
+    def __len__(self) -> int:
+        return len(self.projects)
+
+    def to_json(self) -> Any:
+        return [project.to_json() for project in self.projects
+                if project.name != self.none_project]
+
+
 class Config:
     config: Dict[str, Any]
-    projects: List[Project]
-    none_project: str
 
     def __init__(self, values: Dict[str, Any]) -> None:
         self.port = int(values['daemon']['port'])
@@ -69,11 +94,10 @@ class Config:
         self.interval = int(values['gui']['interval'])
         self.run_daemon = bool(values['gui']['run_daemon'])
         self.start_day_time = str(values['gui']['start_day_time'])
-        self.none_project = str(uuid.uuid4())
-        self.projects = [Project.reinstate(project)
-                         for project
-                         in values['gui']['projects']]
-        self.projects.append(Project.create_empty(self.none_project))
+        self.projects = Projects.reinstate(
+            values['gui']['projects'],
+            str(uuid.uuid4())
+        )
 
     def get_full_address(self) -> str:
         return '%s:%s' % (self.host, self.port)

@@ -97,8 +97,7 @@ class MainPageWidget(QtWidgets.QWidget):
 
         analyzed_events = analyzer.analyze_events(buckets, events)
         self.last_matched_events = analyzer.match(analyzed_events,
-                                                  self.config.projects,
-                                                  self.config.none_project)
+                                                  self.config.projects)
         chart_data = get_pie_chart(self.last_matched_events)
         self.chart.draw(chart_data)
         self._run_projects(chart_data)
@@ -146,7 +145,7 @@ class MainPageWidget(QtWidgets.QWidget):
         self._update_project_events()
 
     def _format_project_name(self, project_name: str) -> str:
-        if project_name == self.config.none_project:
+        if project_name == self.config.projects.none_project:
             return 'None'
         else:
             return project_name

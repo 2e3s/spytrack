@@ -29,12 +29,23 @@ class TestConfig(unittest.TestCase):
         self.assertTrue(config.run_daemon)
 
         self.assertEqual(2, len(config.projects))
-        self.assertEqual('test1', config.projects[0].name)
-        self.assertEqual(config.none_project, config.projects[1].name)
-        self.assertEqual(1, len(config.projects[0].rules))
-        self.assertEqual(1, len(config.projects[0].rules[0].to_json()))
-        self.assertEqual("Test", config.projects[0].rules[0]["app"])
-        self.assertIsNotNone("id" in config.projects[0].rules[0].id)
+        self.assertEqual('test1', config.projects.projects[0].name)
+        self.assertEqual(
+            config.projects.none_project,
+            config.projects.projects[1].name
+        )
+        self.assertEqual(1, len(config.projects.projects[0].rules))
+        self.assertEqual(
+            1,
+            len(config.projects.projects[0].rules[0].to_json())
+        )
+        self.assertEqual(
+            "Test",
+            config.projects.projects[0].rules[0]["app"]
+        )
+        self.assertIsNotNone(
+            "id" in config.projects.projects[0].rules[0].id
+        )
 
         config.host = '20'
         self.assertEqual('20', config.host)

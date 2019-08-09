@@ -2,6 +2,7 @@ from typing import List
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QListWidgetItem, QVBoxLayout
 from analyze.matched_event import MatchedEvent
+from config.config import Projects
 from gui.main_page_widget import MainPageWidget
 from gui.project_widget import ProjectWidget
 from gui.ui.main import Ui_Main
@@ -54,7 +55,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def _setup_projects_settings(self) -> None:
         layout: QVBoxLayout = self.ui.projectsBox.layout()
         for project in self.config.projects:
-            if project.name == self.config.none_project:
+            if project.name == self.config.projects.none_project:
                 continue
             project_widget = self._create_project_widget(layout, project)
             layout.addWidget(project_widget)
@@ -90,7 +91,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.config.host = self.ui.hostEdit.text()
         self.config.interval = int(self.ui.intervalBox.value())
         self.config.run_daemon = self.ui.isLocalServerBox.isChecked()
-        self.config.projects = self._get_projects()
+        self.config.projects = Projects(
+            self._get_projects(),
+            self.config.projects.none_project
+        )
 
         self.config_storage.save(self.config)
         self.stats_runner.reload(self.config)
