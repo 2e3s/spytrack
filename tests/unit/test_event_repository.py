@@ -3,7 +3,7 @@ from datetime import datetime
 from aw_core import Event
 from typing import List, Tuple
 from analyze.event_repository import EventRepository
-from .dataset import get_events, get_date
+from .dataset import get_events
 from unittest.mock import Mock, MagicMock
 from aw_client import ActivityWatchClient
 
@@ -36,42 +36,6 @@ class TestEventRepository(unittest.TestCase):
             ('Another2', 'whatever', 3, 2),
             ('Browser', 'website - Browser', 6, 5),
             ('Browser', 'whatever - Browser', 12, 6),
-        ], events)
-
-    def test_get_cached_events(self) -> None:
-        mock_events1 = [
-            Event(4, get_date(16), 2, {'app': 'x', 'title': 'nothing3'}),
-            Event(3, get_date(10), 5, {'app': 'x', 'title': 'website'}),
-            Event(2, get_date(5), 4, {'app': 'x', 'title': 'nothing2'}),
-            Event(1, get_date(1), 3, {'app': 'x', 'title': 'nothing1'}),
-        ]
-        mock_events2 = [
-            Event(6, get_date(27), 2, {'app': 'x', 'title': 'nothing3'}),
-            Event(5, get_date(21), 5, {'app': 'x', 'title': 'website'}),
-            Event(4, get_date(16), 4, {'app': 'x', 'title': 'nothing3'}),
-            Event(3, get_date(10), 5, {'app': 'x', 'title': 'website'}),
-        ]
-        self.client_mock.get_events = MagicMock(
-            side_effect=[mock_events1, mock_events2]
-        )
-
-        time = datetime.now()
-        events = self.repository.get_cached_events('window', time, time)
-        self.check_events([
-            ('x', 'nothing3', 16, 2),
-            ('x', 'website', 10, 5),
-            ('x', 'nothing2', 5, 4),
-            ('x', 'nothing1', 1, 3),
-        ], events)
-
-        events = self.repository.get_cached_events('window', time, time)
-        self.check_events([
-            ('x', 'nothing3', 27, 2),
-            ('x', 'website', 21, 5),
-            ('x', 'nothing3', 16, 4),
-            ('x', 'website', 10, 5),
-            ('x', 'nothing2', 5, 4),
-            ('x', 'nothing1', 1, 3),
         ], events)
 
     def check_events(self, checked_events: List[Tuple[str, str, int, int]],

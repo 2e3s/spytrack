@@ -72,7 +72,7 @@ class MainPageWidget(QtWidgets.QWidget):
         self.timer.start(self.config.interval * 1000)
 
     def _run_chart(self) -> None:
-        analyzer = AnalyzerFacade()
+        analyzer = AnalyzerFacade(self.events_repository, self.config)
         if self.ui.disableDateRange.isChecked():
             end_date = datetime.now()
             start_date = self._get_last_day_beginning(end_date)
@@ -80,24 +80,11 @@ class MainPageWidget(QtWidgets.QWidget):
             end_date = self.ui.endDateTimeEdit.dateTime().toPyDateTime()
             start_date = self.ui.startDateTimeEdit.dateTime().toPyDateTime()
 
-        buckets = self.events_repository.fetch_buckets()
-
-        if self.ui.disableDateRange.isChecked():
-            events = self.events_repository.get_cached_bucket_events(
-                list(buckets.keys()),
-                start_date,
-                end_date
-            )
-        else:
-            events = self.events_repository.get_bucket_events(
-                list(buckets.keys()),
-                start_date,
-                end_date
-            )
-
-        analyzed_events = analyzer.analyze_events(buckets, events)
-        self.last_matched_events = analyzer.match(analyzed_events,
-                                                  self.config.projects)
+        self.last_matched_events = analyzer.analyze(
+            start_date,
+            end_date,
+            self.ui.disableDateRange.isChecked()
+        )
         chart_data = get_pie_chart(self.last_matched_events)
         self.chart.draw(chart_data)
         self._run_projects(chart_data)

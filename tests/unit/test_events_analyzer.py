@@ -1,9 +1,9 @@
 import unittest
 
 from analyze.bucket_type import BucketType
+from analyze.events_analyzer import EventsAnalyzer
 from config.config import Projects
 from . dataset import get_events
-from analyze.analyzer_facade import AnalyzerFacade
 from config import Project, Rule
 
 
@@ -12,7 +12,7 @@ class TestAnalyzer(unittest.TestCase):
         super().setUp()
 
     def test_analyze_events(self) -> None:
-        analyzer = AnalyzerFacade()
+        analyzer = EventsAnalyzer()
         events = analyzer.analyze_events(
             {
                 'window': BucketType.APP,
