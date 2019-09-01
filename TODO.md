@@ -12,8 +12,11 @@
 
 ## Optimization
 
-- (1) Don't intersect all events, only after the last intersected one
-- (2) Don't aggregate on all events, add to the intersection only the last events
+- (1) Don't re-render if the window is hidden
+- (1) Move out computations to a separate window
+- (1) Reduce memory footprint by [optimizing](https://habr.com/ru/post/455722/) events
+- (3) Don't intersect all events, only after the last intersected one
+- (3) Don't aggregate on all events, add to the intersection only the last events
 
 ## Configuration
 

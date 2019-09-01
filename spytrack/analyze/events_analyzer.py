@@ -1,5 +1,5 @@
 import re
-from typing import Dict, List, Any, Callable
+from typing import Dict, List, Any, Callable, Tuple
 from analyze.bucket_type import BucketType
 from config.config import Projects
 from .event import Event
@@ -18,6 +18,9 @@ BucketPointCondition = Callable[[BucketPoint], bool]
 
 class EventsAnalyzer:
     browser_buckets_cache: Dict[BucketName, str] = {}
+
+    def __init__(self) -> None:
+        self.matches_cache: Dict[str, Tuple[str, str]] = {}
 
     def analyze_events(self, buckets: Buckets,
                        bucket_events: Dict[BucketName, Events]) -> Events:
@@ -83,26 +86,27 @@ class EventsAnalyzer:
     def match(self, events: Events, projects: Projects) -> List[MatchedEvent]:
         matched_events = []
         for event in events:
-            match_result = False
-            for project in projects:
-                for rule in project.rules:
-                    match_result = self._match_event(event, rule)
-                    if match_result:
-                        matched_event = MatchedEvent(project.name, rule.id,
-                                                     event)
-                        matched_events.append(matched_event)
-                        break
-                if match_result:
-                    break
-            if not match_result:
-                matched_event = MatchedEvent(projects.none_project,
-                                             projects.none_project,
-                                             event)
-                matched_events.append(matched_event)
+            data_hash = event.stringify_data()
+            if data_hash in self.matches_cache:
+                hit = self.matches_cache[data_hash]
+                matched_event = MatchedEvent(hit[0], hit[1], event)
+            else:
+                matched_event = self._match_event(event, projects)
+                self.matches_cache[data_hash] = (matched_event.project,
+                                                 matched_event.rule_id)
+            matched_events.append(matched_event)
 
         return matched_events
 
-    def _match_event(self, event: Event, definition: Rule) -> bool:
+    def _match_event(self, event: Event, projects: Projects) -> MatchedEvent:
+        for project in projects:
+            for rule in project.rules:
+                if self._is_event_matching(event, rule):
+                    return MatchedEvent(project.name, rule.id, event)
+        return MatchedEvent(projects.none_project, projects.none_project,
+                            event)
+
+    def _is_event_matching(self, event: Event, definition: Rule) -> bool:
         if 'url' in definition and 'url' in event.data:
             return re.search(definition['url'], event.data['url'],
                              flags=re.IGNORECASE) is not None

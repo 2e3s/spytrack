@@ -4,7 +4,7 @@ from analyze.bucket_type import BucketType
 from analyze.cached_event_repository import CachedEventRepository
 from analyze.event_repository import EventRepository
 from analyze.events_analyzer import EventsAnalyzer
-from config.config import Config
+from config import Config
 from .event import Event
 from .matched_event import MatchedEvent
 from .bucket_point import BucketPoint

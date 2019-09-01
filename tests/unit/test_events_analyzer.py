@@ -64,16 +64,25 @@ class TestAnalyzer(unittest.TestCase):
             self.assertEqual(check[2],
                              event.duration.seconds, event.data['title'])
 
-        matched_events = analyzer.match(events, Projects([
+        projects = Projects([
             Project('test1',
                     [Rule({'id': '1', 'type': 'app', 'app': 'Browser'})])
-        ], 'none'))
+        ], 'none')
+        matched_events = analyzer.match(events, projects)
         check_matched_events = [
             ('nothing2', None),
             ('website - Browser', 'test1'),
             ('website', None),
             ('website', None),
         ]
+        for i in range(0, len(check_matched_events)):
+            matched_check = check_matched_events[i]
+            matched_event = matched_events[i]
+            self.assertEqual(matched_check[0],
+                             matched_event.event.data['title'])
+
+        # Work with a cache with the same result
+        matched_events = analyzer.match(events, projects)
         for i in range(0, len(check_matched_events)):
             matched_check = check_matched_events[i]
             matched_event = matched_events[i]
