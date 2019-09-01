@@ -47,10 +47,10 @@
 
 ## Refactoring
 
-- (2) Hide AW client under a reading repository
-- (1) Add a linter
 - (2) Run windows_watcher_run in a thread
 - (3) Move out settings widget
+- (3) Remove EventsAnalyzer in favor of root functions
+- (3) Remove aw_core.Event usage besides repository
 
 ## Bugs
 

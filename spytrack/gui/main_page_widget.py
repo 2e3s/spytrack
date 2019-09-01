@@ -31,6 +31,7 @@ class MainPageWidget(QtWidgets.QWidget):
             self._update_project_events
         )
         self.last_matched_events = []
+        self.analyzer = AnalyzerFacade(self.events_repository, self.config)
 
         self._setup_datetime()
         self._run_timer()
@@ -38,6 +39,7 @@ class MainPageWidget(QtWidgets.QWidget):
     def reload_config(self, config: Config) -> None:
         self.config = config
         self.timer.stop()
+        self.analyzer = AnalyzerFacade(self.events_repository, config)
         self.chart.reload_config(config)
         self.timer.start(self.config.interval * 1000)
 
@@ -49,11 +51,11 @@ class MainPageWidget(QtWidgets.QWidget):
         self.ui.startDateTimeEdit.setDateTime(start_time)
         self.ui.endDateTimeEdit.setDateTime(end_time.replace())
 
-        def _state_changed() -> None:
+        def state_changed() -> None:
             is_range_disabled = self.ui.disableDateRange.isChecked()
             self.ui.endDateTimeEdit.setDisabled(is_range_disabled)
             self.ui.startDateTimeEdit.setDisabled(is_range_disabled)
-        self.ui.disableDateRange.stateChanged.connect(_state_changed)
+        self.ui.disableDateRange.stateChanged.connect(state_changed)
 
     def _get_last_day_beginning(self, now_time: datetime) -> datetime:
         (hours, minutes) = self.config.start_day_time.split(':')
@@ -72,7 +74,6 @@ class MainPageWidget(QtWidgets.QWidget):
         self.timer.start(self.config.interval * 1000)
 
     def _run_chart(self) -> None:
-        analyzer = AnalyzerFacade(self.events_repository, self.config)
         if self.ui.disableDateRange.isChecked():
             end_date = datetime.now()
             start_date = self._get_last_day_beginning(end_date)
@@ -80,7 +81,7 @@ class MainPageWidget(QtWidgets.QWidget):
             end_date = self.ui.endDateTimeEdit.dateTime().toPyDateTime()
             start_date = self.ui.startDateTimeEdit.dateTime().toPyDateTime()
 
-        self.last_matched_events = analyzer.analyze(
+        self.last_matched_events = self.analyzer.analyze(
             start_date,
             end_date,
             self.ui.disableDateRange.isChecked()
