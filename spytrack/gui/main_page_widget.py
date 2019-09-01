@@ -61,7 +61,7 @@ class MainPageWidget(QtWidgets.QWidget):
                                       minute=int(minutes),
                                       second=0)
         if start_time > now_time:
-            start_time = start_time.replace(day=start_time.day - 1)
+            start_time = start_time - timedelta(days=1)
         return start_time
 
     def _run_timer(self) -> None:
