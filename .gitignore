@@ -2,3 +2,5 @@ venv
 .*
 **/__pycache__/
 spytrack/gui/ui/*.py
+/build/
+/dist/
