@@ -1,36 +1,9 @@
 import yaml
 import argparse
+import appdirs
 from pathlib import Path
 from config import Config, ConfigDict
-import appdirs
-
-default_config = """
-daemon:
-  host: http://localhost
-  port: 9011
-gui:
-  interval: 5
-  projects:
-  - name: coding
-    rules:
-    - app: pycharm
-      type: app
-    - title: Qt Designer
-      type: app
-    - type: web
-      url: .*qt.io.*
-    - type: web
-      url: python
-    - title: python
-      type: web
-    - title: pyqt
-      type: web
-    - app: code
-      title: .*Visual Studio Code
-      type: app
-  run_daemon: true
-  start_day_time: '5:00'
-"""
+from config.default_config import default_yaml
 
 
 def get_config_file() -> Path:
@@ -57,7 +30,7 @@ class FileConfigStorage:
         try:
             if not self.file.exists():
                 self.file.parent.mkdir(parents=True, exist_ok=True)
-                values = yaml.safe_load(default_config)
+                values = yaml.safe_load(default_yaml)
                 self._persist(values)
             else:
                 values = yaml.safe_load(self.file.read_text())
