@@ -14,6 +14,9 @@ To track your activities in browsers install the plugin for your browser from
 
 ### From sources
 
+```
+git clone https://github.com/2e3s/spytrack.git
+``` 
 In the source folder:
 
 - Full GUI application: `python spytrack --config=./config.default.yaml`
@@ -22,11 +25,9 @@ In the source folder:
 
 ### Build
 
-TODO pyinstaller
-
-## Run
-
-TODO
+```
+make build-all
+```
 
 ### Run tests
 

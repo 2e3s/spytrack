@@ -2,16 +2,17 @@
 
 block_cipher = None
 
-lib_path = 'venv/lib/python3.6/site-packages/'
+lib_path = '../venv/lib/python3.6/site-packages/'
 
 a = Analysis(
-    ['spytrack/__main__.py'],
-    pathex=[lib_path, 'projects/spytrack'],
+    ['../spytrack/__main__.py'],
+    pathex=[lib_path, '../projects/spytrack'],
     binaries=[],
     datas=[
         (lib_path + 'aw_core/schemas/bucket.json', 'aw_core/schemas'),
         (lib_path + 'aw_core/schemas/event.json', 'aw_core/schemas'),
-        (lib_path + 'aw_core/schemas/export.json', 'aw_core/schemas')
+        (lib_path + 'aw_core/schemas/export.json', 'aw_core/schemas'),
+        ('../icon.png', '.'),
     ],
     hiddenimports=[],
     hookspath=[],
@@ -22,6 +23,7 @@ a = Analysis(
     cipher=block_cipher,
     noarchive=False
 )
+# a.binaries = [x for x in a.binaries if not x[0].startswith("libicu")]
 pyz = PYZ(
     a.pure, a.zipped_data,
     cipher=block_cipher

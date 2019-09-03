@@ -10,3 +10,9 @@ test:
 	python -m unittest discover
 	venv/bin/mypy --config-file=mypy.ini --strict spytrack/__main__.py
 	venv/bin/mypy --config-file=mypy.ini --strict tests
+
+build-all:
+	rm -rf ./dist
+	make build-ui
+	pyinstaller --clean --workpath ./.build build/spytrack.spec
+	python setup.py sdist

@@ -20,6 +20,7 @@
 
 ## Configuration
 
+- (1) The config file should be create from the default one
 - (2) Put the configuration file to the local directory
 - (1) Add stop-list for app tracker
 - (2) Wildcard rules and special syntax for regexp rules
@@ -69,40 +70,40 @@ ValueError: day is out of range for month
 Traceback (most recent call last):
   File "/usr/lib/python3.6/threading.py", line 916, in _bootstrap_inner
     self.run()
-  File "/home/demi/projects/spytrack/venv/lib/python3.6/site-packages/pykeyboard/x11.py", line 252, in run
+  File "~/projects/spytrack/venv/lib/python3.6/site-packages/pykeyboard/x11.py", line 252, in run
     self.display2.record_enable_context(self.ctx, self.handler)
-  File "/home/demi/projects/spytrack/venv/lib/python3.6/site-packages/Xlib/ext/record.py", line 243, in enable_context
+  File "~/projects/spytrack/venv/lib/python3.6/site-packages/Xlib/ext/record.py", line 243, in enable_context
     context = context)
-  File "/home/demi/projects/spytrack/venv/lib/python3.6/site-packages/Xlib/ext/record.py", line 220, in __init__
+  File "~/projects/spytrack/venv/lib/python3.6/site-packages/Xlib/ext/record.py", line 220, in __init__
     rq.ReplyRequest.__init__(self, *args, **keys)
-  File "/home/demi/projects/spytrack/venv/lib/python3.6/site-packages/Xlib/protocol/rq.py", line 1369, in __init__
+  File "~/projects/spytrack/venv/lib/python3.6/site-packages/Xlib/protocol/rq.py", line 1369, in __init__
     self.reply()
-  File "/home/demi/projects/spytrack/venv/lib/python3.6/site-packages/Xlib/protocol/rq.py", line 1381, in reply
+  File "~/projects/spytrack/venv/lib/python3.6/site-packages/Xlib/protocol/rq.py", line 1381, in reply
     self._display.send_and_recv(request = self._serial)
-  File "/home/demi/projects/spytrack/venv/lib/python3.6/site-packages/Xlib/protocol/display.py", line 612, in send_and_recv
+  File "~/projects/spytrack/venv/lib/python3.6/site-packages/Xlib/protocol/display.py", line 612, in send_and_recv
     gotreq = self.parse_response(request)
-  File "/home/demi/projects/spytrack/venv/lib/python3.6/site-packages/Xlib/protocol/display.py", line 704, in parse_response
+  File "~/projects/spytrack/venv/lib/python3.6/site-packages/Xlib/protocol/display.py", line 704, in parse_response
     gotreq = self.parse_request_response(request) or gotreq
-  File "/home/demi/projects/spytrack/venv/lib/python3.6/site-packages/Xlib/protocol/display.py", line 792, in parse_request_response
+  File "~/projects/spytrack/venv/lib/python3.6/site-packages/Xlib/protocol/display.py", line 792, in parse_request_response
     req._parse_response(self.data_recv[:self.recv_packet_len])
-  File "/home/demi/projects/spytrack/venv/lib/python3.6/site-packages/Xlib/ext/record.py", line 224, in _parse_response
+  File "~/projects/spytrack/venv/lib/python3.6/site-packages/Xlib/ext/record.py", line 224, in _parse_response
     self._callback(r)
-  File "/home/demi/projects/spytrack/venv/lib/python3.6/site-packages/pykeyboard/x11.py", line 273, in handler
+  File "~/projects/spytrack/venv/lib/python3.6/site-packages/pykeyboard/x11.py", line 273, in handler
     self._tap(event)
-  File "/home/demi/projects/spytrack/venv/lib/python3.6/site-packages/pykeyboard/x11.py", line 285, in _tap
+  File "~/projects/spytrack/venv/lib/python3.6/site-packages/pykeyboard/x11.py", line 285, in _tap
     character = self.keysym_to_string[keysym]
 KeyError: 65032
 
 ERROR:aw_watcher_window.main:Exception thrown while trying to get active
 window: 'NoneType' object has no attribute 'decode' Traceback (most
 recent call last): File
-"/home/demi/projects/spytrack/venv/lib/python3.6/site-packages/aw_watcher_window/main.py",
+"~/projects/spytrack/venv/lib/python3.6/site-packages/aw_watcher_window/main.py",
 line 65, in heartbeat_loop current_window = get_current_window() File
-"/home/demi/projects/spytrack/venv/lib/python3.6/site-packages/aw_watcher_window/lib.py",
+"~/projects/spytrack/venv/lib/python3.6/site-packages/aw_watcher_window/lib.py",
 line 44, in get_current_window return get_current_window_linux() File
-"/home/demi/projects/spytrack/venv/lib/python3.6/site-packages/aw_watcher_window/lib.py",
+"~/projects/spytrack/venv/lib/python3.6/site-packages/aw_watcher_window/lib.py",
 line 14, in get_current_window_linux name = xlib.get_window_name(window)
 File
-"/home/demi/projects/spytrack/venv/lib/python3.6/site-packages/aw_watcher_window/xlib.py",
+"~/projects/spytrack/venv/lib/python3.6/site-packages/aw_watcher_window/xlib.py",
 line 65, in get_window_name return r.decode('latin1') # WM_NAME with
 type=STRING. AttributeError: 'NoneType' object has no attribute 'decode'

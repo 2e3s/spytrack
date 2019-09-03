@@ -1,6 +1,7 @@
 from typing import Optional
-from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtWidgets import QAction, qApp, QMenu, QSystemTrayIcon, QApplication
+from PyQt5 import QtCore
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QAction, qApp, QMenu, QSystemTrayIcon
 from gui.main_window import MainWindow
 
 
@@ -10,10 +11,8 @@ class Tray(QSystemTrayIcon):
                  main_window: Optional[MainWindow] = None
                  ) -> None:
         super().__init__(parent)
-        self.setIcon(QApplication
-                     .style()
-                     .standardIcon(QtWidgets.QStyle.SP_ComputerIcon)
-                     )
+        icon = QIcon('icon.png')
+        self.setIcon(icon)
 
         quit_action = QAction("Exit", parent)
         quit_action.triggered.connect(qApp.quit)
