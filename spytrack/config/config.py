@@ -1,6 +1,8 @@
 import uuid
 from typing import Dict, Any, List, Iterator
 
+ConfigDict = Dict[str, Any]
+
 
 class Rule:
     APP = 'app'
@@ -86,9 +88,9 @@ class Projects:
 
 
 class Config:
-    config: Dict[str, Any]
+    config: ConfigDict
 
-    def __init__(self, values: Dict[str, Any]) -> None:
+    def __init__(self, values: ConfigDict) -> None:
         self.port = int(values['daemon']['port'])
         self.host = str(values['daemon']['host'])
         self.interval = int(values['gui']['interval'])

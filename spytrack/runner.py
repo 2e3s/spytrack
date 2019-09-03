@@ -1,7 +1,7 @@
 import argparse
 
 from runner import Runner
-from config import ConfigStorage, get_config_filename
+from config import ConfigStorage, get_config_file
 from gui import Gui
 
 if __name__ == "__main__":
@@ -14,7 +14,7 @@ if __name__ == "__main__":
     )
     args, _ = parser.parse_known_args()
 
-    config_storage = ConfigStorage(get_config_filename())
+    config_storage = ConfigStorage(get_config_file())
     if args.no_tray:
         config = config_storage.load()
         aw_runner = Runner(config)

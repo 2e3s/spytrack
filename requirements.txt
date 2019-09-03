@@ -8,3 +8,4 @@ pyyaml
 parameterized
 PyQt5
 PyQtChart
+appdirs

@@ -9,9 +9,28 @@ from config.config_storage import FileConfigStorage, Config
 
 
 class TestFileConfigStorage(unittest.TestCase):
-    def test_save_load(self) -> None:
-        filename = '%s/test_save.config.yaml' % get_current_directory()
+    def test_load_non_existing(self) -> None:
+        current_directory = get_current_directory()
+        filename = Path(
+            '{}/test/test_save.config.yaml'.format(current_directory)
+        )
+        file = Path(filename)
+        self.assertFalse(file.exists())
+        self.assertFalse(file.parent.exists())
+
         save_storage = FileConfigStorage(filename)
+        try:
+            config = save_storage.load()
+            self.assertEqual('http://localhost', config.host)
+            self.assertTrue(file.is_file())
+        finally:
+            file.unlink()
+            file.parent.rmdir()
+
+    def test_save_load(self) -> None:
+        current_directory = get_current_directory()
+        file = Path('{}/test_save.config.yaml'.format(current_directory))
+        save_storage = FileConfigStorage(file)
 
         initial_yaml = {
             "daemon": {
@@ -32,13 +51,13 @@ class TestFileConfigStorage(unittest.TestCase):
                 ],
             },
         }
+
         saved_config = Config(initial_yaml)
         save_storage.save(saved_config)
-        file = Path(filename)
         self.assertTrue(file.is_file())
 
         try:
-            load_storage = FileConfigStorage(filename)
+            load_storage = FileConfigStorage(file)
             load_config = load_storage.load()
 
             self.assertEqual("http://save.test", load_config.host)

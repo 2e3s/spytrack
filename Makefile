@@ -16,3 +16,5 @@ build-all:
 	make build-ui
 	pyinstaller --clean --workpath ./.build build/spytrack.spec
 	python setup.py sdist
+	python setup.py clean
+	rm -rf ./Spytrack.egg-info
