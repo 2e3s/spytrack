@@ -32,7 +32,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Sputracker</string>
+   <string>Spytrack</string>
   </property>
   <property name="toolButtonStyle">
    <enum>Qt::ToolButtonFollowStyle</enum>
