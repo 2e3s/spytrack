@@ -1,5 +1,6 @@
 from typing import List
 from PyQt5 import QtWidgets, QtCore
+from PyQt5.QtGui import QCloseEvent
 from PyQt5.QtWidgets import QListWidgetItem, QVBoxLayout
 from analyze.matched_event import MatchedEvent
 from config.config import Projects
@@ -32,6 +33,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self._setup_projects_settings()
         self._setup_server_settings()
         self._setup_main_widget()
+
+    def closeEvent(self, event: QCloseEvent) -> None:
+        event.ignore()
+        self.hide()
 
     def _setup_main_widget(self) -> None:
         self.main_page_widget = MainPageWidget(self.config)
