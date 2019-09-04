@@ -7,6 +7,9 @@ class Event(ParentEvent):  # type: ignore
         super().__init__(event.id, event.timestamp, event.duration, event.data)
         self.type = bucket_type
 
+    def has_equal_data(self, event: 'Event') -> bool:
+        return self.stringify_data() == event.stringify_data()
+
     def stringify_data(self) -> str:
         result = ''
         if 'url' in self.data:

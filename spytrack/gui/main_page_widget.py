@@ -100,17 +100,27 @@ class MainPageWidget(QtWidgets.QWidget):
         selected_project = selected_items[0].data(Qt.UserRole)
         i = 0
         items = []
-        for event in self.last_matched_events[::-1]:
+        items_duration: Dict[str, float] = {}
+        selected_events: List[MatchedEvent] = []
+
+        for event in reversed(self.last_matched_events):
             if event.project == selected_project:
-                text = ', '.join(["{}={}".format(key, value)
-                                  for key, value
-                                  in event.event.data.items()])
-                duration = int(event.event.duration.total_seconds())
-                text = '{}: {}'.format(duration, text)
-                items.append(text)
-                i += 1
-                if i > 500:
-                    break
+                data_hash = event.stringify_data()
+                if data_hash not in items_duration:
+                    items_duration[data_hash] = 0
+                    selected_events.append(event)
+                items_duration[data_hash] += event.duration.total_seconds()
+
+        for event in selected_events:
+            text = ', '.join(["{}={}".format(key, value)
+                              for key, value
+                              in event.data.items()])
+            duration = int(items_duration[event.stringify_data()])
+            text = '{}: {}'.format(duration, text)
+            items.append(text)
+            i += 1
+            if i > 500:
+                break
         self.ui.projectEventsList.addItems(items)
 
     def _run_projects(self, chart_data: PieChartData) -> None:

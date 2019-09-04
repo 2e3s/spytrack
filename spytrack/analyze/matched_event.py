@@ -1,12 +1,11 @@
 from .event import Event
 
 
-class MatchedEvent:
+class MatchedEvent(Event):
     project: str
     rule_id: str
-    event: Event
 
     def __init__(self, project: str, rule_id: str, event: Event) -> None:
+        super().__init__(event, event.type)
         self.rule_id = rule_id
-        self.event = event
         self.project = project

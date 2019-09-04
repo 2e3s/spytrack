@@ -79,7 +79,7 @@ class TestAnalyzer(unittest.TestCase):
             matched_check = check_matched_events[i]
             matched_event = matched_events[i]
             self.assertEqual(matched_check[0],
-                             matched_event.event.data['title'])
+                             matched_event.data['title'])
 
         # Work with a cache with the same result
         matched_events = analyzer.match(events, projects)
@@ -87,4 +87,4 @@ class TestAnalyzer(unittest.TestCase):
             matched_check = check_matched_events[i]
             matched_event = matched_events[i]
             self.assertEqual(matched_check[0],
-                             matched_event.event.data['title'])
+                             matched_event.data['title'])

@@ -11,7 +11,7 @@ class PieChartData:
     def count_event(self, event: MatchedEvent) -> None:
         if event.project not in self.data:
             self.data[event.project] = 0
-        self.data[event.project] += event.event.duration.total_seconds()
+        self.data[event.project] += event.duration.total_seconds()
 
 
 def get_pie_chart(matched_events: List[MatchedEvent]) -> PieChartData:
