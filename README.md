@@ -19,9 +19,9 @@ git clone https://github.com/2e3s/spytrack.git
 ``` 
 In the source folder:
 
-- Full GUI application: `python spytrack --config=./config.default.yaml`
-- Just a tray icon (send stats only): `python spytrack/runner.py --config=./config.default.yaml`
-- Console, no GUI (send stats only): `python spytrack/runner.py --no-tray --config=./config.default.yaml`
+- Full GUI application: `python spytrack`
+- Just a tray icon (send stats only): `python spytrack/runner.py`
+- Console, no GUI (send stats only): `python spytrack/runner.py --no-tray`
 
 ### Build
 
