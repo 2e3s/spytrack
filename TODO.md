@@ -13,15 +13,13 @@
 ## Optimization
 
 - (1) Don't re-render if the window is hidden
-- (1) Move out computations to a separate window
+- (1) Move out computations to a separate thread
 - (1) Reduce memory footprint by [optimizing](https://habr.com/ru/post/455722/) events
 - (3) Don't intersect all events, only after the last intersected one
 - (3) Don't aggregate on all events, add to the intersection only the last events
 
 ## Configuration
 
-- (1) The config file should be create from the default one
-- (2) Put the configuration file to the local directory
 - (1) Add stop-list for app tracker
 - (2) Wildcard rules and special syntax for regexp rules
 - (1) Validate input forms
@@ -29,13 +27,13 @@
 ## UI
 
 - (2) Icon should change depending on the current project
-- (4) Projects should be added, removed and edited in a separated UI rather than a config
 - (3) Change tray icon depending on a project and its completion
 - (2) "Add a rule" dialog to on double-click on project's event
 - (3) Inclusive and exclusive filtering for events on the selected project (for analyzing mismatches).
       Maybe a normal string with ES-like syntax: `+search1 +"search2 complex" -"search exclude"` for simplicity
-- (2) Make projects settings collapsable
+- (1) Make projects settings collapsable
 - (2) Edit start of the day
+- (2) Add https://github.com/ActivityWatch/aw-webui to compensate the lack of features
 
 ## Projects
 
@@ -45,8 +43,8 @@
 # Planned fixes
 
 - (1) List of projects and their events should be updated after any start-end time change
-- (2) Make AW web-ui link configurable
 - (2) Redraw chart on Today checkbox or date change
+- (3) Regexp validation
 
 ## Refactoring
 

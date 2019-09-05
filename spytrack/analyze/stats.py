@@ -3,7 +3,7 @@ from .matched_event import MatchedEvent
 
 
 class PieChartData:
-    data: Dict[str, int]
+    data: Dict[str, float]
 
     def __init__(self) -> None:
         self.data = {}

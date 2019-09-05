@@ -1,7 +1,7 @@
 default_yaml = """
 daemon:
   host: http://localhost
-  port: 9011
+  port: 5600
 gui:
   interval: 5
   projects:

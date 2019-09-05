@@ -18,3 +18,4 @@ build-all:
 	python setup.py sdist
 	python setup.py clean
 	rm -rf ./Spytrack.egg-info
+	zip -9 -r ./dist/spytrack.zip dist/spytrack
