@@ -2,3 +2,4 @@ mypy
 parameterized
 pyinstaller
 flake8
+stdeb

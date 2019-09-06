@@ -9,10 +9,9 @@ a = Analysis(
     pathex=[lib_path, '../projects/spytrack'],
     binaries=[],
     datas=[
-        (lib_path + 'aw_core/schemas/bucket.json', 'aw_core/schemas'),
-        (lib_path + 'aw_core/schemas/event.json', 'aw_core/schemas'),
-        (lib_path + 'aw_core/schemas/export.json', 'aw_core/schemas'),
+        (lib_path + 'aw_core/schemas', 'aw_core/schemas'),
         ('../icon.png', '.'),
+        ('../.build/static', '.build/static'),
     ],
     hiddenimports=[],
     hookspath=[],

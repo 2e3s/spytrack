@@ -25,6 +25,11 @@ In the source folder:
 
 ### Build
 
+Prerequisites:
+- rpm
+- zip
+- nodejs
+
 ```
 make build-all
 ```

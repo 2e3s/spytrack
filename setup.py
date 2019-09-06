@@ -11,7 +11,7 @@ URL = 'https://github.com/2e3s/spytrack'
 EMAIL = '2e3s19@gmail.com'
 AUTHOR = '2e3s'
 REQUIRES_PYTHON = '>=3.6.0'
-VERSION = '0.0.1'
+VERSION = '0.1.2'
 
 REQUIRED = [
     'aw-core',

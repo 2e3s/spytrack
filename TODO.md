@@ -42,6 +42,7 @@
 
 # Planned fixes
 
+- (1) Update projects on day change
 - (1) List of projects and their events should be updated after any start-end time change
 - (2) Redraw chart on Today checkbox or date change
 - (3) Regexp validation
