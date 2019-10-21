@@ -116,6 +116,22 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QToolButton" name="settingsButton">
+       <property name="text">
+        <string>...</string>
+       </property>
+       <property name="checkable">
+        <bool>false</bool>
+       </property>
+       <property name="popupMode">
+        <enum>QToolButton::DelayedPopup</enum>
+       </property>
+       <property name="toolButtonStyle">
+        <enum>Qt::ToolButtonIconOnly</enum>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>

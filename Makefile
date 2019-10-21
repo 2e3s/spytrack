@@ -1,3 +1,5 @@
+SHELL := /bin/bash
+
 build-ui:
 	pyuic5 ./spytrack/gui/ui/main.ui > ./spytrack/gui/ui/main.py
 	pyuic5 ./spytrack/gui/ui/project.ui > ./spytrack/gui/ui/project.py
@@ -8,8 +10,11 @@ test:
 	flake8 spytrack/ --exclude spytrack/gui/ui --max-complexity 10
 	flake8 tests/
 	python -m unittest discover
-	venv/bin/mypy --config-file=mypy.ini --strict spytrack/__main__.py
-	venv/bin/mypy --config-file=mypy.ini --strict tests
+	mypy --config-file=mypy.ini --strict spytrack/__main__.py
+	mypy --config-file=mypy.ini --strict tests
+
+run:
+	source venv/bin/activate && python spytrack
 
 build-all:
 	rm -rf ./dist
