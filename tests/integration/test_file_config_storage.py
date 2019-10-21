@@ -5,7 +5,8 @@ import yaml
 from config import Project, Rule
 from tests.integration import get_current_directory
 from pathlib import Path
-from config.config_storage import FileConfigStorage, Config
+from config.config_storage import FileConfigStorage
+from config.config import Config
 
 
 class TestFileConfigStorage(unittest.TestCase):

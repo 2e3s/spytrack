@@ -3,11 +3,10 @@ from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtGui import QCloseEvent
 from PyQt5.QtWidgets import QListWidgetItem, QVBoxLayout
 from analyze.matched_event import MatchedEvent
-from config.config import Projects
 from gui.main_page_widget import MainPageWidget
 from gui.project_widget import ProjectWidget
 from gui.ui.main import Ui_Main
-from config import ConfigStorage, Project, Rule
+from config import ConfigStorage, Project, Rule, Projects
 from runner import Runner
 
 WidgetItems = List[QListWidgetItem]

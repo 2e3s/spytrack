@@ -1,1 +1,3 @@
-from runner.runner import Runner  # noqa
+from runner.runner import Runner
+
+__all__ = ['Runner']

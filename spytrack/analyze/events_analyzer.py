@@ -1,12 +1,11 @@
 import re
 from typing import Dict, List, Any, Callable, Tuple
 from analyze.bucket_type import BucketType
-from config.config import Projects
 from .event import Event
 from .matched_event import MatchedEvent
 from .bucket_point import BucketPoint
 from .timeline import Timeline
-from config import Rule
+from config import Rule, Projects
 
 ClientBuckets = Dict[str, Dict[str, Any]]
 Events = List[Event]
