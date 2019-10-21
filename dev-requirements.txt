@@ -3,3 +3,4 @@ parameterized
 pyinstaller
 flake8
 stdeb
+pyqt5-stubs
