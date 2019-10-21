@@ -2,7 +2,7 @@ import yaml
 import argparse
 import appdirs
 from pathlib import Path
-from config import Config, ConfigDict
+from config.config import Config, ConfigDict
 from config.default_config import default_yaml
 
 

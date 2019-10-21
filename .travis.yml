@@ -1,0 +1,13 @@
+language: python
+python:
+  - "3.6"
+addons:
+  apt:
+    packages:
+    - pyqt5-dev-tools
+install:
+  - pip install -r requirements.txt
+  - pip install -r dev-requirements.txt
+  - make build-ui
+script:
+  - make test

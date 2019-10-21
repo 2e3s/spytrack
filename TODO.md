@@ -53,6 +53,8 @@
 - (3) Move out settings widget
 - (3) Remove EventsAnalyzer in favor of root functions
 - (3) Remove aw_core.Event usage besides repository
+- (3) https://github.com/wemake-services/wemake-python-styleguide
+- (3) https://timothycrosley.github.io/hypothesis-auto/
 
 ## Bugs
 

@@ -1,3 +1,6 @@
+[![Software License][ico-license]][link-license]
+[![Build Status][ico-travis]][link-travis]
+
 # Spytrack
 
 Spytrack is a desktop application to track and correct your work and other activities.
@@ -60,3 +63,9 @@ The loggers can also be run separately in with a very basic functionality if UI 
 ## Compatibility
 
 The system is tested on the Linux only. Windows will follow.
+
+[ico-license]: https://img.shields.io/badge/License-GPLv3-blue.svg?style=flat-square
+[ico-travis]: https://img.shields.io/travis/2e3s/spytrack/master.svg?style=flat-square
+
+[link-license]: COPYING
+[link-travis]: https://travis-ci.org/2e3s/spytrack
