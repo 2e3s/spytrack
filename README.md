@@ -68,4 +68,4 @@ The system is tested on the Linux only. Windows will follow.
 [ico-travis]: https://img.shields.io/travis/2e3s/spytrack/master.svg?style=flat-square
 
 [link-license]: COPYING
-[link-travis]: https://travis-ci.org/2e3s/spytrack
+[link-travis]: https://travis-ci.com/2e3s/spytrack
