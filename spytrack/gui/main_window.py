@@ -25,7 +25,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.config = config_storage.load()
         self.config_storage = config_storage
         self.ui = Ui_Main()
-        self.ui.setupUi(self)  # type: ignore
+        self.ui.setupUi(self)
 
         self.last_matched_events = []
 

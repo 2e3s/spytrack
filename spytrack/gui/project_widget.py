@@ -11,7 +11,7 @@ class ProjectWidget(QtWidgets.QFrame):
     def __init__(self, project: Project) -> None:
         super().__init__()
         self.ui = Ui_ProjectFrame()
-        self.ui.setupUi(self)  # type: ignore
+        self.ui.setupUi(self)
         self.ui.nameEdit.setText(project.name)
         self._setup_rules(project)
 

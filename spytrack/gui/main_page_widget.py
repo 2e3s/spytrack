@@ -22,12 +22,12 @@ class MainPageWidget(QtWidgets.QWidget):
         super().__init__()
         self.config = config
         self.ui = Ui_MainPage()
-        self.ui.setupUi(self)  # type: ignore
+        self.ui.setupUi(self)
         aw_client = ActivityWatchClient("gui", testing=False)
         self.events_repository = EventRepository(aw_client)
 
         self.chart = Chart(self.config, self.ui.chartView)
-        self.ui.projectsTimesList.itemSelectionChanged.connect(  # type: ignore
+        self.ui.projectsTimesList.itemSelectionChanged.connect(
             self._update_project_events
         )
         self.last_matched_events = []

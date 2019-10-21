@@ -12,7 +12,7 @@ class RuleWidget(QtWidgets.QFrame):
     def __init__(self, rule: Rule) -> None:
         super().__init__()
         self.ui = Ui_RuleFrame()
-        self.ui.setupUi(self)  # type: ignore
+        self.ui.setupUi(self)
         self._rule = rule
 
         if rule.is_app():
