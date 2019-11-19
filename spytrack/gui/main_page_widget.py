@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from typing import List, Dict
+from typing import List, Dict, Callable
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QListWidgetItem
@@ -8,8 +8,9 @@ from analyze.event_repository import EventRepository
 from analyze.matched_event import MatchedEvent
 from analyze import AnalyzerFacade
 from analyze.stats import get_pie_chart, PieChartData
-from config import Config
+from config import Config, ConfigStorage
 from gui.chart import Chart
+from gui.settings_window import SettingsWindow
 from .ui.main_page import Ui_MainPage
 
 WidgetItems = List[QListWidgetItem]
@@ -18,9 +19,13 @@ WidgetItems = List[QListWidgetItem]
 class MainPageWidget(QtWidgets.QWidget):
     last_matched_events: List[MatchedEvent]
 
-    def __init__(self, config: Config) -> None:
+    def __init__(self,
+                 config_storage: ConfigStorage,
+                 reload_config: Callable[[Config], None]) -> None:
         super().__init__()
-        self.config = config
+        self.external_reload_config = reload_config
+        self.config_storage = config_storage
+        self.config = config_storage.load()
         self.ui = Ui_MainPage()
         self.ui.setupUi(self)
         aw_client = ActivityWatchClient("gui", testing=False)
@@ -30,13 +35,23 @@ class MainPageWidget(QtWidgets.QWidget):
         self.ui.projectsTimesList.itemSelectionChanged.connect(
             self._update_project_events
         )
+        self.ui.settingsButton.clicked.connect(self._show_settings)
         self.last_matched_events = []
         self.analyzer = AnalyzerFacade(self.events_repository, self.config)
 
         self._setup_datetime()
         self._run_timer()
 
-    def reload_config(self, config: Config) -> None:
+    def _show_settings(self) -> None:
+        settings_window = SettingsWindow(
+            self.config,
+            self.config_storage,
+            self._reload_config
+        )
+        settings_window.exec_()
+
+    def _reload_config(self, config: Config) -> None:
+        self.external_reload_config(config)
         self.config = config
         self.timer.stop()
         self.analyzer = AnalyzerFacade(self.events_repository, config)
