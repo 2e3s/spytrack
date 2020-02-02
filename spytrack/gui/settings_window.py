@@ -3,13 +3,15 @@ from typing import List, Callable
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QVBoxLayout
 
-from config import Project, Rule, Projects, Config
+from config import Project, Rule, Config
 from gui.project_widget import ProjectWidget
 from gui.ui.settings import Ui_settingsWindow
 from config import ConfigStorage
 
 
 class SettingsWindow(QtWidgets.QDialog):
+    config: Config
+
     def __init__(self,
                  config: Config,
                  config_storage: ConfigStorage,
@@ -75,13 +77,12 @@ class SettingsWindow(QtWidgets.QDialog):
         return project_widget
 
     def _modify_config(self) -> None:
-        self.config.port = int(self.ui.portBox.value())
-        self.config.host = self.ui.hostEdit.text()
-        self.config.interval = int(self.ui.intervalBox.value())
-        self.config.run_daemon = self.ui.isLocalServerBox.isChecked()
-        self.config.projects = Projects(
-            self._get_projects(),
-            self.config.projects.none_project
+        self.config = self.config.modify(
+            int(self.ui.portBox.value()),
+            self.ui.hostEdit.text(),
+            int(self.ui.intervalBox.value()),
+            self.ui.isLocalServerBox.isChecked(),
+            self._get_projects()
         )
 
         self.config_storage.save(self.config)

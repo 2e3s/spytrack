@@ -34,7 +34,7 @@ class FileConfigStorage:
                 self._persist(values)
             else:
                 values = yaml.safe_load(self.file.read_text())
-            return Config(values)
+            return Config.parse(values)
         except yaml.YAMLError:
             raise ConfigParseException
 
