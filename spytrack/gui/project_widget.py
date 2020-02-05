@@ -55,9 +55,11 @@ class ProjectWidget(QtWidgets.QFrame):
     def project(self) -> Project:
         name = self.ui.nameEdit.text()
         layout: QVBoxLayout = self.ui.rulesBox.layout()
-        rule_widgets: List[RuleWidget] = [layout.itemAt(i).widget()
-                                          for i
-                                          in range(0, layout.count())]
+        rule_widgets: List[RuleWidget] = []
+        for i in range(0, layout.count()):
+            widget = layout.itemAt(i).widget()
+            assert isinstance(widget, RuleWidget)
+            rule_widgets.append(widget)
         return Project(name, [rule_widget.rule
                               for rule_widget
                               in rule_widgets])
