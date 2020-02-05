@@ -11,7 +11,8 @@ class ProjectWidget(QtWidgets.QFrame):
     def __init__(
             self,
             project: Project,
-            remove_rule_callback: Callable[['ProjectWidget'], None]
+            on_remove_rule: Callable[['ProjectWidget'], None],
+            on_edit_project_name: Callable[[str], None],
     ) -> None:
         super().__init__()
         self.ui = Ui_ProjectFrame()
@@ -20,8 +21,9 @@ class ProjectWidget(QtWidgets.QFrame):
         self._setup_rules(project)
 
         self.ui.removeButton.clicked.connect(
-            lambda: remove_rule_callback(self)
+            lambda: on_remove_rule(self)
         )
+        self.ui.nameEdit.textChanged.connect(on_edit_project_name)
 
     def _setup_rules(self, project: Project) -> None:
         layout: QVBoxLayout = self.ui.rulesBox.layout()

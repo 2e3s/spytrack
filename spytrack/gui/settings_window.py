@@ -65,9 +65,12 @@ class SettingsWindow(QtWidgets.QDialog):
             self.projects_box.addItem(project_widget, project.name)
 
     def _create_project_widget(self, project: Project) -> ProjectWidget:
-        project_widget = ProjectWidget(project, self._remove_callback)
+        project_widget = ProjectWidget(
+            project,
+            self._remove_callback,
+            self._edit_project_name
+        )
         self.actual_project_widgets.append(project_widget)
-
         return project_widget
 
     def _add_callback(self) -> None:
@@ -77,9 +80,12 @@ class SettingsWindow(QtWidgets.QDialog):
         self.projects_box.addItem(project_widget, new_project_name)
         self.projects_box.setCurrentWidget(project_widget)
 
-    def _remove_callback(self, project_widget: ProjectWidget) -> None:
-        self.actual_project_widgets.remove(project_widget)
-        project_widget.remove_from(self.ui.projectsFrame.layout())
+    def _remove_callback(self, widget: ProjectWidget) -> None:
+        self.actual_project_widgets.remove(widget)
+        widget.remove_from(self.ui.projectsFrame.layout())
+
+    def _edit_project_name(self, name: str) -> None:
+        self.projects_box.setItemText(self.projects_box.currentIndex(), name)
 
     def _modify_config(self) -> None:
         self.config = self.config.modify(
