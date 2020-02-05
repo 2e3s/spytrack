@@ -49,7 +49,8 @@ class SettingsWindow(QtWidgets.QDialog):
                                                else QtCore.Qt.Unchecked)
 
     def _setup_projects_settings(self) -> None:
-        layout: QVBoxLayout = self.ui.projectsTab.layout()
+        self.ui.addProjectButton.clicked.connect(self._add_callback)
+        layout: QVBoxLayout = self.ui.projectsFrame.layout()
 
         self.projects_box: QToolBox = QToolBox()
         self.projects_box.setFrameShape(QFrame.NoFrame)
@@ -60,28 +61,25 @@ class SettingsWindow(QtWidgets.QDialog):
         for project in self.config.projects:
             if project.name == self.config.projects.none_project:
                 continue
-            project_widget = self._create_project_widget(layout, project)
+            project_widget = self._create_project_widget(project)
             self.projects_box.addItem(project_widget, project.name)
 
-    def _create_project_widget(self,
-                               layout: QVBoxLayout,
-                               project: Project) -> ProjectWidget:
-        project_widget = ProjectWidget(project)
+    def _create_project_widget(self, project: Project) -> ProjectWidget:
+        project_widget = ProjectWidget(project, self._remove_callback)
         self.actual_project_widgets.append(project_widget)
 
-        def add_callback() -> None:
-            empty_project = Project('', [Rule({'type': 'app'})])
-            self.projects_box.addItem(
-                self._create_project_widget(layout, empty_project),
-                'New project'
-            )
-
-        def remove_callback() -> None:
-            self.actual_project_widgets.remove(project_widget)
-            project_widget.remove_from(layout)
-
-        project_widget.register_callbacks(add_callback, remove_callback)
         return project_widget
+
+    def _add_callback(self) -> None:
+        empty_project = Project('', [Rule({'type': 'app'})])
+        self.projects_box.addItem(
+            self._create_project_widget(empty_project),
+            'New project'
+        )
+
+    def _remove_callback(self, project_widget: ProjectWidget) -> None:
+        self.actual_project_widgets.remove(project_widget)
+        project_widget.remove_from(self.ui.projectsFrame.layout())
 
     def _modify_config(self) -> None:
         self.config = self.config.modify(

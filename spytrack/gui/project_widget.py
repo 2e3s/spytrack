@@ -8,12 +8,20 @@ from .ui.project import Ui_ProjectFrame
 
 
 class ProjectWidget(QtWidgets.QFrame):
-    def __init__(self, project: Project) -> None:
+    def __init__(
+            self,
+            project: Project,
+            remove_rule_callback: Callable[['ProjectWidget'], None]
+    ) -> None:
         super().__init__()
         self.ui = Ui_ProjectFrame()
         self.ui.setupUi(self)
         self.ui.nameEdit.setText(project.name)
         self._setup_rules(project)
+
+        self.ui.removeButton.clicked.connect(
+            lambda: remove_rule_callback(self)
+        )
 
     def _setup_rules(self, project: Project) -> None:
         layout: QVBoxLayout = self.ui.rulesBox.layout()
@@ -35,13 +43,6 @@ class ProjectWidget(QtWidgets.QFrame):
         )
 
         return rule_widget
-
-    def register_callbacks(self,
-                           add_rule: Callable[[], None],
-                           remove_rule: Callable[[], None]
-                           ) -> None:
-        self.ui.addButton.clicked.connect(add_rule)
-        self.ui.removeButton.clicked.connect(remove_rule)
 
     def remove_from(self, layout: QVBoxLayout) -> None:
         self.hide()
