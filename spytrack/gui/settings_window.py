@@ -1,7 +1,7 @@
 from typing import List, Callable
 
 from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtWidgets import QVBoxLayout
+from PyQt5.QtWidgets import QVBoxLayout, QFrame, QToolBox
 
 from config import Project, Rule, Config
 from gui.project_widget import ProjectWidget
@@ -23,6 +23,7 @@ class SettingsWindow(QtWidgets.QDialog):
         self.ui = Ui_settingsWindow()
         self.ui.setupUi(self)
 
+        self.actual_project_widgets: List[ProjectWidget] = []
         self._setup_projects_settings()
         self._setup_server_settings()
 
@@ -32,11 +33,7 @@ class SettingsWindow(QtWidgets.QDialog):
         super().accept()
 
     def _get_projects(self) -> List[Project]:
-        layout: QVBoxLayout = self.ui.projectsBox.layout()
-        widgets: List[ProjectWidget] = [layout.itemAt(i).widget()
-                                        for i
-                                        in range(0, layout.count())]
-        return [widget.project for widget in widgets]
+        return [widget.project for widget in self.actual_project_widgets]
 
     def _setup_server_settings(self) -> None:
         self.ui.portBox.setValue(self.config.port)
@@ -52,28 +49,38 @@ class SettingsWindow(QtWidgets.QDialog):
                                                else QtCore.Qt.Unchecked)
 
     def _setup_projects_settings(self) -> None:
-        layout: QVBoxLayout = self.ui.projectsBox.layout()
+        layout: QVBoxLayout = self.ui.projectsTab.layout()
+
+        self.projects_box: QToolBox = QToolBox()
+        self.projects_box.setFrameShape(QFrame.NoFrame)
+        self.projects_box.setLineWidth(0)
+        self.projects_box.setFrameShadow(QFrame.Plain)
+
+        layout.addWidget(self.projects_box)
         for project in self.config.projects:
             if project.name == self.config.projects.none_project:
                 continue
             project_widget = self._create_project_widget(layout, project)
-            layout.addWidget(project_widget)
+            self.projects_box.addItem(project_widget, project.name)
 
     def _create_project_widget(self,
                                layout: QVBoxLayout,
                                project: Project) -> ProjectWidget:
         project_widget = ProjectWidget(project)
-        project_widget.register_callbacks(
-            lambda: layout.insertWidget(
-                layout.indexOf(project_widget),
-                self._create_project_widget(layout,
-                                            Project('',
-                                                    [Rule({'type': 'app'})]
-                                                    )
-                                            )
-            ),
-            lambda: project_widget.remove_from(layout)
-        )
+        self.actual_project_widgets.append(project_widget)
+
+        def add_callback() -> None:
+            empty_project = Project('', [Rule({'type': 'app'})])
+            self.projects_box.addItem(
+                self._create_project_widget(layout, empty_project),
+                'New project'
+            )
+
+        def remove_callback() -> None:
+            self.actual_project_widgets.remove(project_widget)
+            project_widget.remove_from(layout)
+
+        project_widget.register_callbacks(add_callback, remove_callback)
         return project_widget
 
     def _modify_config(self) -> None:
