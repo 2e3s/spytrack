@@ -71,11 +71,11 @@ class SettingsWindow(QtWidgets.QDialog):
         return project_widget
 
     def _add_callback(self) -> None:
-        empty_project = Project('', [Rule({'type': 'app'})])
-        self.projects_box.addItem(
-            self._create_project_widget(empty_project),
-            'New project'
-        )
+        new_project_name = 'New project'
+        empty_project = Project(new_project_name, [Rule({'type': 'app'})])
+        project_widget = self._create_project_widget(empty_project)
+        self.projects_box.addItem(project_widget, new_project_name)
+        self.projects_box.setCurrentWidget(project_widget)
 
     def _remove_callback(self, project_widget: ProjectWidget) -> None:
         self.actual_project_widgets.remove(project_widget)
