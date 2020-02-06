@@ -5,6 +5,7 @@ build-ui:
 	pyuic5 ./spytrack/gui/ui/project.ui > ./spytrack/gui/ui/project.py
 	pyuic5 ./spytrack/gui/ui/rule.ui > ./spytrack/gui/ui/rule.py
 	pyuic5 ./spytrack/gui/ui/main_page.ui > ./spytrack/gui/ui/main_page.py
+	pyuic5 ./spytrack/gui/ui/settings.ui > ./spytrack/gui/ui/settings.py
 
 test:
 	flake8 spytrack/ --exclude spytrack/gui/ui --max-complexity 10

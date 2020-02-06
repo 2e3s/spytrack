@@ -8,12 +8,22 @@ from .ui.project import Ui_ProjectFrame
 
 
 class ProjectWidget(QtWidgets.QFrame):
-    def __init__(self, project: Project) -> None:
+    def __init__(
+            self,
+            project: Project,
+            on_remove_rule: Callable[['ProjectWidget'], None],
+            on_edit_project_name: Callable[[str], None],
+    ) -> None:
         super().__init__()
         self.ui = Ui_ProjectFrame()
         self.ui.setupUi(self)
         self.ui.nameEdit.setText(project.name)
         self._setup_rules(project)
+
+        self.ui.removeButton.clicked.connect(
+            lambda: on_remove_rule(self)
+        )
+        self.ui.nameEdit.textChanged.connect(on_edit_project_name)
 
     def _setup_rules(self, project: Project) -> None:
         layout: QVBoxLayout = self.ui.rulesBox.layout()
@@ -36,13 +46,6 @@ class ProjectWidget(QtWidgets.QFrame):
 
         return rule_widget
 
-    def register_callbacks(self,
-                           add_rule: Callable[[], None],
-                           remove_rule: Callable[[], None]
-                           ) -> None:
-        self.ui.addButton.clicked.connect(add_rule)
-        self.ui.removeButton.clicked.connect(remove_rule)
-
     def remove_from(self, layout: QVBoxLayout) -> None:
         self.hide()
         layout.removeWidget(self)
@@ -52,9 +55,11 @@ class ProjectWidget(QtWidgets.QFrame):
     def project(self) -> Project:
         name = self.ui.nameEdit.text()
         layout: QVBoxLayout = self.ui.rulesBox.layout()
-        rule_widgets: List[RuleWidget] = [layout.itemAt(i).widget()
-                                          for i
-                                          in range(0, layout.count())]
+        rule_widgets: List[RuleWidget] = []
+        for i in range(0, layout.count()):
+            widget = layout.itemAt(i).widget()
+            assert isinstance(widget, RuleWidget)
+            rule_widgets.append(widget)
         return Project(name, [rule_widget.rule
                               for rule_widget
                               in rule_widgets])

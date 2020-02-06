@@ -1,7 +1,7 @@
 from typing import Optional
 from PyQt5 import QtCore
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QAction, qApp, QMenu, QSystemTrayIcon
+from PyQt5.QtWidgets import QAction, qApp, QMenu, QSystemTrayIcon, QApplication
 from gui.main_window import MainWindow
 
 
@@ -37,6 +37,10 @@ class Tray(QSystemTrayIcon):
             self._show_hide_main_window()
 
     def _show_hide_main_window(self) -> None:
+        for window in QApplication.topLevelWidgets():
+            if not window.isHidden() \
+                    and window.objectName() == "settingsWindow":
+                return
         if self.main_window.isVisible():
             self.main_window.hide()
         else:

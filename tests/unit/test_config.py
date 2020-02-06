@@ -5,7 +5,7 @@ from config import Config
 
 class TestConfig(unittest.TestCase):
     def test_created(self) -> None:
-        config = Config({
+        config = Config.parse({
             "daemon": {
                 "port": 1,
                 "host": "2",

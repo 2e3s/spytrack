@@ -53,7 +53,7 @@ class TestFileConfigStorage(unittest.TestCase):
             },
         }
 
-        saved_config = Config(initial_yaml)
+        saved_config = Config.parse(initial_yaml)
         save_storage.save(saved_config)
         self.assertTrue(file.is_file())
 

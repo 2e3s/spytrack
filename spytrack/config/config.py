@@ -90,16 +90,33 @@ class Projects:
 class Config:
     config: ConfigDict
 
-    def __init__(self, values: ConfigDict) -> None:
-        self.port = int(values['daemon']['port'])
-        self.host = str(values['daemon']['host'])
-        self.interval = int(values['gui']['interval'])
-        self.run_daemon = bool(values['gui']['run_daemon'])
-        self.start_day_time = str(values['gui']['start_day_time'])
-        self.projects = Projects.reinstate(
+    @staticmethod
+    def parse(values: ConfigDict) -> 'Config':
+        port = int(values['daemon']['port'])
+        host = str(values['daemon']['host'])
+        interval = int(values['gui']['interval'])
+        run_daemon = bool(values['gui']['run_daemon'])
+        start_day_time = str(values['gui']['start_day_time'])
+        projects = Projects.reinstate(
             values['gui']['projects'],
             str(uuid.uuid4())
         )
+        return Config(port, host, interval, run_daemon, start_day_time,
+                      projects)
+
+    def __init__(self, port: int, host: str, interval: int, run_daemon: bool,
+                 start_day_time: str, projects: Projects) -> None:
+        self.port = port
+        self.host = host
+        self.interval = interval
+        self.run_daemon = run_daemon
+        self.start_day_time = start_day_time
+        self.projects = projects
+
+    def modify(self, port: int, host: str, interval: int, run_daemon: bool,
+               projects: List[Project]) -> 'Config':
+        return Config(port, host, interval, run_daemon, self.start_day_time,
+                      Projects(projects, self.projects.none_project))
 
     def get_full_address(self) -> str:
         return '%s:%s' % (self.host, self.port)
