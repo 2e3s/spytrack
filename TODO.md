@@ -31,9 +31,8 @@
 - (2) "Add a rule" dialog to on double-click on project's event
 - (3) Inclusive and exclusive filtering for events on the selected project (for analyzing mismatches).
       Maybe a normal string with ES-like syntax: `+search1 +"search2 complex" -"search exclude"` for simplicity
-- (1) Make projects settings collapsable
+- (2) Make project rules settings slimmer per line
 - (2) Edit start of the day
-- (2) Add https://github.com/ActivityWatch/aw-webui to compensate the lack of features
 
 ## Projects
 
@@ -50,7 +49,6 @@
 ## Refactoring
 
 - (2) Run windows_watcher_run in a thread
-- (3) Move out settings widget
 - (3) Remove EventsAnalyzer in favor of root functions
 - (3) Remove aw_core.Event usage besides repository
 - (3) https://github.com/wemake-services/wemake-python-styleguide
